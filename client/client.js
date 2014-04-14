@@ -139,7 +139,7 @@ Template.gameArea.rewardComputed = function() {
 Template.gameArea.allRoundsPlayed = function() {
   var timesPlayed = Players.findOne({idPlayer: Meteor.user().username}).timesPlayed;
   var numberRounds = Sessions.findOne({idSession: Players.findOne({idPlayer: Meteor.user().username}).idSession}).numberRounds;
-  return (timesPlayed === numberRounds);
+  return (timesPlayed == numberRounds);
 }
 
 Template.gameArea.groupIsFull = function(){
