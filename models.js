@@ -49,12 +49,14 @@ Meteor.methods({
 
   updateRoundReward: function(username, idSession){
     var sessionRule = Sessions.findOne({idSession: idSession}).rule;
+    var groupSize = Sessions.findOne({idSession: idSession}).groupSize;
     var group = Players.findOne({idPlayer: username}).actualGroup;
     var groupMates = Players.find({actualGroup: group, idSession: idSession});
     var pp = [];
     var qq = [];
     var myP = 0;
     var myQ = 0;
+    var finalReward = 0;
     
     
     groupMates.forEach(function(g) {      
@@ -64,14 +66,45 @@ Meteor.methods({
       }
       else
       {
-	pp.concat((g.pPlayed)[(g.pPlayed).length-1]);
-	qq.concat((g.qPlayed)[(g.qPlayed).length-1]);
+	pp= pp.concat((g.pPlayed)[(g.pPlayed).length-1]);
+	qq= qq.concat((g.qPlayed)[(g.qPlayed).length-1]);
       }
     })
     
-    Players.update({idPlayer: username},{$push: {reward: myP*3}});
+    //my proposal is accepted?
+    var countAcceptors = 0;
+    
+    for(i=0; i<qq.length && countAcceptors<sessionRule; i++){
+      if(qq[i]<=myP) 
+        countAcceptors++;
+    }
+    
+    if(countAcceptors>=sessionRule) 
+      finalReward+=(10-myP);
+      
+    console.log(finalReward);
+    //my group mates proposals are accepted?
+    for(i=0; i<pp.length; i++){
+      var numberAcceptorsProposalP = 0;
+      for(j=0; j<qq.length && numberAcceptorsProposalP < sessionRule; j++){
+
+        if(i==j){
+          if(pp[i]>= myQ) numberAcceptorsProposalP++;
+        }
+        else{
+          if(pp[i]>= qq[j]) numberAcceptorsProposalP++;
+        }
+      }
+      if(numberAcceptorsProposalP>=sessionRule){
+       finalReward+=parseFloat(pp[i])/(groupSize-1);
+       console.log(finalReward);
+       }
+    }
+    
+    Players.update({idPlayer: username},{$push: {reward: finalReward}});
     Players.update({idPlayer: username},{$set:  {state: 3}});
     return false;
   }
+  
   
 });
