@@ -1,0 +1,153 @@
+<head>
+  <title>Multiplayer Ultimatum Game</title>
+</head>
+
+<body>
+  {{> mainPage}}
+</body>
+
+<template name="mainPage">
+  <div class="main">
+  
+    <div class="title" align="center">
+      <h2> Multiplayer Ultimatum Game </h2>
+    </div>
+
+    <div class="informations" align="center">
+      {{#if currentUser}}
+        {{> userInformation}}
+      {{else}}
+        {{> loginSection}}
+      {{/if}}  
+      
+    </div>
+  
+    <div class="content" align="center">
+      {{#if currentUser}}
+        {{> adminArea}}
+        {{> gameArea }}
+      {{/if}}
+    </div>
+    
+  </div>
+</template>
+
+<template name="userInformation">
+    <h3>welcome {{currentUser.username}} </h3>
+    <input id="logOutButton" type="submit" value="logout">
+</template>
+
+<template name="adminArea">
+  {{#if show}}
+  <div>
+    {{> createUser}}
+    {{> createSession}}
+    {{> groupCapacity}}
+  </div>
+  {{/if}}
+</template>
+      
+<template name="gameArea">
+  {{#if show}}
+    {{#if groupIsFull}}
+      {{#if strategiesInserted}}
+        {{#if allGroupResponded}}
+          {{#if rewardComputed}}
+            <h1> your reward: {{roundReward}} </h1>
+          {{else}}
+            <input id="updateRoundReward" type="submit" value="compute reward">
+          {{/if}}
+          
+        {{else}}
+          {{> waitOtherStrategies}}
+        {{/if}}
+      {{else}}
+        {{> introduceStrategy}}
+      {{/if}}
+    {{else}}
+      <h4> Wait for other players... </h4>
+      <h5> In this game room, so far: </h5>
+      {{#each groupMates}}
+        <div> {{idPlayer}} </div>
+      {{/each}}
+    {{/if}}
+  {{/if}}
+</template>
+
+<template name="waitOtherStrategies">
+  <h1> wait other strategies </h1>
+</template>
+
+<template name="createUser">
+  <h3> List of users </h3>
+  {{> listOfUsers}}
+  
+  <h3> List of players </h3>
+  {{> players}}
+  
+  <h3> Create new user </h3>
+  <form aligh="center">
+    <input id="newUserId" type="text" value="name" onfocus="if (this.value=='name') this.value=''"><br>
+    <input id="newUserSessionId" type="text" value="session" onfocus="if (this.value=='session') this.value=''"><br>
+    <input id="createNewUser" type="submit" value="create user">
+  </form>
+</template>
+
+<template name="createSession">
+  <h3> List of created sessions </h3>
+  {{> sessions }}
+  <h3> Create new session </h3>
+  <form aligh="center">
+    <input id="sessionId" type="text" value="id" onfocus="if (this.value=='id') this.value=''"><br>
+    <input id="populationSize" type="number" value="population size" onfocus="if (this.value=='population size') this.value=''"><br>
+    <input id="groupSize" type="number" value="group size" onfocus="if (this.value=='group size') this.value=''"><br>
+    <input id="numberRounds" type="number" value="number rounds" onfocus="if (this.value=='number rounds') this.value=''"><br>
+    <input id="rule" type="number" value="rule" onfocus="if (this.value=='rule') this.value=''"><br>
+    <input id="date" type="text" value="date" onfocus="if (this.value=='date') this.value=''"><br>
+    <input id="createNewSession" type="submit" value="create session">
+  </form>
+</template>
+
+<template name="listOfUsers">
+  {{#each userss}}
+  <div> {{username}} </div>
+  {{/each}}
+</template>
+
+<template name="loginSection">
+  <form aligh="center">
+    <input id="loginSectionUsername" type="text" value="username" onfocus="if (this.value=='username') this.value=''"><br>
+    <input id="loginSectionPassword" type="password" value="password" onfocus="if (this.value=='password') this.value=''"><br>
+    <input id="loginSectionLogin" type="submit" value="login">
+  </form>
+</template>
+
+<template name="players">
+  <p> List of registered players: </p>
+  {{#each player}}
+  <div>{{idPlayer}} {{idSession}} {{timesPlayed}} {{actualGroup}} {{password}} {{state}} {{pPlayed}} {{qPlayed}} {{reward}}</div>
+  {{/each}}
+</template>
+
+<template name="sessions">
+  <p> List of registered sessions: </p>
+  {{#each session}}
+    <div>{{idSession}}</div>
+  {{/each}}
+</template>
+
+<template name="groupCapacity">
+  <p> List of groups and its capacity: </p>
+  {{#each sessions}}
+      <div><strong>idSession:</strong>{{idSession}}  <strong>capacity:</strong> {{groupCapacity}}</div> 
+  {{/each}}
+</template>
+
+<template name="introduceStrategy">
+  <p> Please, introduce your strategy: </p>
+  <form aligh="center">
+    <input id="pValue" type="number" value="p" onfocus="if (this.value=='p') this.value=''"><br>
+    <input id="qValue" type="number" value="q" onfocus="if (this.value=='q') this.value=''"><br>
+    <input id="submiteStrategy" type="submit" value="submit">
+  </form>
+</template>
