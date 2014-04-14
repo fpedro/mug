@@ -39,5 +39,12 @@ Meteor.methods({
     }
     
     return false;
-  }
+  },
+  
+  prepareNextRound: function(username, idSession){
+    Players.update({idPlayer: username}, {$set: {state: 0}});
+    Players.update({idPlayer: username}, {$set: {actualGroup: ""}});
+    return false;
+  }  
+
 });

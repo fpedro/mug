@@ -7,9 +7,10 @@ Meteor.methods({
   
   //admin methods
   createSession: function(idSession, populationSize, groupSize, numberRounds, date, rule){
-    Sessions.insert({idSession: idSession, populationSize: populationSize, groupSize: groupSize, groupCapacity: [], numberRounds: numberRounds, date: date, rule: rule});
+    Sessions.insert({idSession: idSession, populationSize: populationSize, groupSize: groupSize, groupCapacity: [], receivedStrategiesOnGroup: [], numberRounds: numberRounds, date: date, rule: rule});
     for(i = 0; i<(populationSize/groupSize)*numberRounds; i++){
       Sessions.update({idSession: idSession} ,{$push: {groupCapacity: groupSize}});
+      Sessions.update({idSession: idSession} ,{$push: {receivedStrategiesOnGroup: 0}});
     }
 
     //create necessary users
@@ -33,6 +34,12 @@ Meteor.methods({
     Players.update({idPlayer: idPlayer}, {$push: {pPlayed: p}});
     Players.update({idPlayer: idPlayer}, {$push: {qPlayed: q}});
     Players.update({idPlayer: idPlayer}, {$set: {state: 2}});
+    Players.update({idPlayer: idPlayer}, {$inc: {timesPlayed: 1}});
+    var group = Players.findOne({idPlayer: idPlayer}).actualGroup;
+    var idSession = Players.findOne({idPlayer: idPlayer}).idSession;
+    var rsog = Sessions.findOne({idSession: idSession}).receivedStrategiesOnGroup;
+    rsog[group]++;
+    Sessions.update({idSession: idSession},{$set: {receivedStrategiesOnGroup: rsog}});
     return false;
   },
   
@@ -41,8 +48,7 @@ Meteor.methods({
   
   incState : function(username){
     var actualState = Players.findOne({idPlayer : username}).state;
-    var newState = (actualState+1)%4;
-    console.log(newState);
+    var newState = (actualState+1)%4; 
     Players.update({idPlayer : username}, {$set: {state : newState}});
     return false;
   },
