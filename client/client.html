@@ -7,26 +7,28 @@
 </body>
 
 <template name="mainPage">
-  <div class="main">
-  
+  <div name="main">
+    <div class="loginInfo" align="right"> {{> loginButtons align="right"}} </div>
     <div class="title" align="center">
       <h2> Multiplayer Ultimatum Game </h2>
     </div>
-
-    <div class="informations" align="center">
+    <div name="informations" align="center">
+      <br>
       {{#if currentUser}}
         {{> userInformation}}
-      {{else}}
-        {{> loginSection}}
       {{/if}}  
-      
+      <br>
     </div>
   
-    <div class="content" align="center">
+    <div name="content" align="center">
       {{#if currentUser}}
         {{> adminArea}}
         {{> gameArea }}
       {{/if}}
+    </div>
+    
+    <div name="footer" align="center">
+
     </div>
     
   </div>
@@ -34,7 +36,6 @@
 
 <template name="userInformation">
     <h3>welcome {{currentUser.username}} </h3>
-    <input id="logOutButton" type="submit" value="logout">
 </template>
 
 <template name="adminArea">
@@ -86,23 +87,18 @@
 </template>
 
 <template name="createUser">
-  <h3> List of users </h3>
   {{> listOfUsers}}
-  
-  <h3> List of players </h3>
   {{> players}}
   
-  <h3> Create new user </h3>
+  <!--<h3> Create new user </h3>
   <form aligh="center">
     <input id="newUserId" type="text" value="name" onfocus="if (this.value=='name') this.value=''"><br>
     <input id="newUserSessionId" type="text" value="session" onfocus="if (this.value=='session') this.value=''"><br>
     <input id="createNewUser" type="submit" value="create user">
-  </form>
+  </form>-->
 </template>
 
 <template name="createSession">
-  <h3> List of created sessions </h3>
-  {{> sessions }}
   <h3> Create new session </h3>
   <form aligh="center">
     <input id="sessionId" type="text" value="id" onfocus="if (this.value=='id') this.value=''"><br>
@@ -116,6 +112,7 @@
 </template>
 
 <template name="listOfUsers">
+  <h3> List of registered players </h3>
   {{#each userss}}
   <div> {{username}} </div>
   {{/each}}
@@ -130,24 +127,47 @@
 </template>
 
 <template name="players">
-  <p> List of registered players: </p>
+  <h3> List of corresponding players </h3>
+  <table>
+    <tr>
+  <td>Player ID</td> 
+  <td>Session</td> 
+  <td>Rounds Played</td>  
+  <td>Actual Group</td>  
+  <td>Password</td>  
+  <td>State</td>  
+  <td>List of p played</td>  
+  <td>List of q played</td>  
+  <td>Rewards</td> 
+  </tr>
   {{#each player}}
-  <div>{{idPlayer}} {{idSession}} {{timesPlayed}} {{actualGroup}} {{password}} {{state}} {{pPlayed}} {{qPlayed}} {{reward}}</div>
+  <tr>
+  <td>{{idPlayer}}</td> 
+  <td>{{idSession}}</td> 
+  <td>{{timesPlayed}}</td>  
+  <td>{{actualGroup}}</td>  
+  <td>{{password}}</td>  
+  <td>{{state}}</td>  
+  <td>{{pPlayed}}</td>  
+  <td>{{qPlayed}}</td>  
+  <td>{{reward}}</td> 
+  </tr>
   {{/each}}
-</template>
-
-<template name="sessions">
-  <p> List of registered sessions: </p>
-  {{#each session}}
-    <div>{{idSession}}</div>
-  {{/each}}
+  </table>
 </template>
 
 <template name="groupCapacity">
-  <p> List of groups and its capacity: </p>
+  <h3> List of sessions and groups registered </h3>
+  <table>
+    <tr>
+    <td>Session ID</td>  <td>Groups and Remaining Capacity</td>  <td>Number of saved strategies on each group </td>
+    </tr>  
   {{#each sessions}}
-      <div><strong>idSession:</strong>{{idSession}}  <strong>capacity:</strong> {{groupCapacity}}  <strong>strategiesReceived:</strong> {{receivedStrategiesOnGroup}}</div> 
+    <tr>
+    <td>{{idSession}}</td>  <td>{{groupCapacity}}</td>  <td>{{receivedStrategiesOnGroup}}</td>
+    </tr>  
   {{/each}}
+  </table>
 </template>
 
 <template name="introduceStrategy">

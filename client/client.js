@@ -1,9 +1,17 @@
+Accounts.ui.config({
+  requestPermissions: {
+  },
+  requestOfflineToken: {
+  },
+  passwordSignupFields: 'USERNAME_ONLY'
+});
+
+Accounts.config({
+  forbidClientAccountCreation : true
+});
+
 Template.players.player = function () {
   return Players.find({});
-}
-
-Template.sessions.session = function () {
-  return Sessions.find({});
 }
 
 Template.createUser.events = {
@@ -30,7 +38,6 @@ Template.introduceStrategy.events = {
     return false;
   }
 }
-
 
 Template.loginSection.events = {
   'click #loginSectionLogin' : function(event) {
@@ -69,19 +76,6 @@ Template.createSession.events = {
   }
 }
 
-Template.listOfUsers.userss = function() {
-  return Meteor.users.find({});
-}
-
-Template.adminArea.show = function() {
-  return (Meteor.user() && Meteor.user().username=="admin");
-
-}
-
-Template.gameArea.show = function() {
-  return (Meteor.user() && Meteor.user().username !="admin"); 
-}
-
 Template.gameArea.events = {
   'click #incrementstate' : function(event) {
     Meteor.call('incState', Meteor.user().username); 
@@ -101,6 +95,19 @@ Template.gameArea.events = {
   }
 }
 
+
+Template.listOfUsers.userss = function() {
+  return Meteor.users.find({});
+}
+
+Template.adminArea.show = function() {
+  return (Meteor.user() && Meteor.user().username=="admin");
+
+}
+
+Template.gameArea.show = function() {
+  return (Meteor.user() && Meteor.user().username !="admin"); 
+}
 
 Template.groupCapacity.sessions = function(){
   return Sessions.find({});
@@ -129,7 +136,7 @@ Template.gameArea.totalReward = function() {
   return totalReward;
 }
 
-//player state logic propositons
+//player state logic propositons (decide what to show to the player)
 
 Template.gameArea.rewardComputed = function() {
   var state = Players.findOne({idPlayer: Meteor.user().username}).state;
@@ -143,7 +150,6 @@ Template.gameArea.allRoundsPlayed = function() {
 }
 
 Template.gameArea.groupIsFull = function(){
-  
   var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
   var state = Players.findOne({idPlayer: Meteor.user().username}).state;
   if(state > 1) return true;
