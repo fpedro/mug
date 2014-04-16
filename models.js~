@@ -42,6 +42,16 @@ Meteor.methods({
     Sessions.update({idSession: idSession},{$set: {receivedStrategiesOnGroup: rsog}});
     return false;
   },
+  
+  computeOutcomeOfGame : function(idGroup){
+  },
+  
+  incState : function(username){
+    var actualState = Players.findOne({idPlayer : username}).state;
+    var newState = (actualState+1)%4; 
+    Players.update({idPlayer : username}, {$set: {state : newState}});
+    return false;
+  },
 
   updateRoundReward: function(username, idSession){
     var sessionRule = Sessions.findOne({idSession: idSession}).rule;

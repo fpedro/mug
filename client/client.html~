@@ -81,6 +81,7 @@
           {{else}}
             <input id="updateRoundReward" type="submit" value="compute reward">
           {{/if}}
+          
         {{else}}
           {{> waitOtherStrategies}}
         {{/if}}
