@@ -3,12 +3,42 @@ Accounts.ui.config({
   },
   requestOfflineToken: {
   },
-  passwordSignupFields: 'USERNAME_AND_EMAIL'
+  passwordSignupFields: 'USERNAME_ONLY'
 });
 
 Accounts.config({
-  forbidClientAccountCreation : false
+  forbidClientAccountCreation : true
 });
+
+
+Template.mainPage.displayInformation = function() {
+  return Session.get("displayInfo");
+}
+
+Template.userInformation.events = {
+  'click #logOutButton' : function(event) {
+    Meteor.logout();
+    return false;
+  },
+  
+  'click #displayInformation': function(event) {
+    Session.set("displayInfo", true);
+    return false;
+  }
+}
+
+
+Template.displayInfo.events = {
+  'click #quitInformationPanel' : function(event) {
+    Session.set("displayInfo", false);
+    return false;
+  },
+  
+  'click #displayInformation': function(event) {
+    Session.set("displayInfo", true);
+    return false;
+  }
+}
 
 Template.players.player = function () {
   return Players.find({});
@@ -23,12 +53,6 @@ Template.createUser.events = {
   }
 }
 
-Template.userInformation.events = {
-  'click #logOutButton' : function(event) {
-    Meteor.logout();
-    return false;
-  }
-}
 
 Template.introduceStrategy.events = {
   'click #submitStrategy' : function(event) {
@@ -43,6 +67,7 @@ Template.loginSection.events = {
   'click #loginSectionLogin' : function(event) {
     var u = document.getElementById('loginSectionUsername').value;
     var p = document.getElementById('loginSectionPassword').value;
+    Session.set("displayInfo", false);
     var loginSuccess = true;
     Meteor.loginWithPassword(u,p,function(wrong){
       if(wrong){
@@ -52,7 +77,9 @@ Template.loginSection.events = {
       else{
 	    var session = Players.findOne({idPlayer: u}).idSession;
 	    if(Meteor.userId() && Meteor.user().username !== "admin"){ 
+	      Session.set("displayInfo", true);
 	      Meteor.call('insertGroup', u, session);
+	      
         }
       }
     });

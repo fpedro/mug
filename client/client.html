@@ -28,16 +28,21 @@
       {{#if currentUser}}
         <!--{{> userInformation}}-->
       {{else}}
-        <h3> Welcome to this behavioral experiment </h3>
-        <h4> Please sign in with the username and password that were given to you </h4>
+        <h3> Welcome to this behavioral experiment.</h3><br>
+        <h4> Please sign in with the username and password that were given to you.</h4>
+        <img src="game-theory.jpg" style="padding-top:40px">
       {{/if}}  
       <br>
     </div>
   
     <div name="content" align="center">
       {{#if currentUser}}
-        {{> adminArea}}
-        {{> gameArea }}
+        {{#if displayInformation}}
+          {{> displayInfo}}
+        {{else}}
+          {{> adminArea}}
+          {{> gameArea }}
+        {{/if}}
       {{/if}}
     </div>
     
@@ -48,11 +53,19 @@
   </div>
 </template>
 
+<template name="displayInfo">
+  <h4> The rules of the game are simple.... Please click continue so you can be assigned to a group and start playing</h4>
+  <button type="submit" class="btn btn-default"  id="quitInformationPanel" >continue</button>
+</template>
+
 <template name="userInformation">
   <p class="navbar-text">welcome {{currentUser.username}}</p>
   <form class="navbar-form navbar-left" role="search">
     <button type="submit" class="btn btn-default"  id="logOutButton" >logout</button>
   </form>
+    <ul class="nav navbar-nav">
+      <li> <a href="#" id="displayInformation">informations</a> </li>
+    </ul>
 </template>
 
 <template name="adminArea">
@@ -105,7 +118,6 @@
 <template name="createUser">
   {{> listOfUsers}}
   {{> players}}
-  
   <!--<h3> Create new user </h3>
   <form aligh="center">
     <input id="newUserId" type="text" value="name" onfocus="if (this.value=='name') this.value=''"><br>
@@ -132,19 +144,18 @@
 <template name="listOfUsers">
   <h3> List of registered users: </h3>
   {{#each userss}}
-  {{username}}, 
+    {{username}} 
   {{/each}}
 </template>
 
 <template name="loginSection">
-
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="username" id="loginSectionUsername" >
-          <input type="text" class="form-control" placeholder="password" id="loginSectionPassword" >
-        </div>
-        <button type="submit" class="btn btn-default"  id="loginSectionLogin" >login</button>
-        </form>
+  <form class="navbar-form navbar-left" role="search" autocomplete="off">
+    <div class="form-group">
+      <input type="text" class="form-control" placeholder="username" id="loginSectionUsername" >
+      <input type="text" class="form-control" placeholder="password" id="loginSectionPassword" >
+    </div>
+    <button type="submit" class="btn btn-default"  id="loginSectionLogin" >login</button>
+  </form>
 </template>
 
 <template name="players">
@@ -198,7 +209,7 @@
   <form aligh="center" role="form">
   <div class="form-group" style="width:20%">
     <input id="pValue" type="number" placeholder="offer"  class="form-control"><br>
-    <input id="qValue" type="number" placeholder="accept aboce"  class="form-control"><br>
+    <input id="qValue" type="number" placeholder="accept above"  class="form-control"><br>
     <input id="submitStrategy" type="submit" value="submit" class="btn btn-default">
     </div>
   </form>
