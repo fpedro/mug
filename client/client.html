@@ -42,7 +42,11 @@
     <div name="content" align="center">
       {{#if currentUser}}
         {{#if displayInformation}}
-          {{> displayInfo}}
+          {{#if welcomePage}}
+            {{> welcome}}
+          {{else}}
+            {{> tutorial}}
+          {{/if}}
         {{else}}
           {{> adminArea}}
           {{> gameArea }}
@@ -57,17 +61,37 @@
   </div>
 </template>
 
-<template name="displayInfo">
-  <h4> In this game, you will be given 10 coins, conditionally. You negotiate this value with a group, composed by other users that are sharing the same room with you. </h4>
-  <h4> You will make your proposal to the group, and also, decide how much you are willing to accept. </h4>
-  <h4> ... </h4>
-  <button type="submit" class="btn btn-default"  id="quitInformationPanel" >continue</button>
+<template name="welcome">
+  <h4> Welcome! </h4>
+  <button type="submit" class="btn btn-default"  id="goTutorial" >proceed to tutorial</button>
 </template>
+
+<template name="tutorial">
+  <h2> Tutorial </h2>
+  
+  <div id=top>
+  <h4> In this game you will </h4>
+  <button type="submit" class="btn btn-default"  id="step1link" >step1</button>
+  </div>
+  
+  <div id=step1 style="display:none">
+  <h1>Step 1</h1>
+  <br>
+  <br>
+  <br>
+  <br>
+  </div>
+  
+
+  
+  <button type="submit" class="btn btn-default"  id="quitInformationPanel" >proceed to game</button>
+</template>
+
 
 <template name="userInformation">
   <p class="navbar-text"> welcome {{currentUser.username}}</p>
     <ul class="nav navbar-nav">
-      <li> <a href="#" id="displayInformation">help</a> </li>
+      <li> <a href="#" id="displayInformation">tutorial</a> </li>
     </ul>
   <form class="navbar-form navbar-left" role="search">
     <button type="submit" class="btn btn-default"  id="logOutButton" >logout</button>

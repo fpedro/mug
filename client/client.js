@@ -10,12 +10,14 @@ Accounts.config({
   forbidClientAccountCreation : true
 });
 
-Session.set("displayInfo", true);
-
 Template.mainPage.displayInformation = function() {
-	console.log(Session.get("displayInfo"));
   return Session.get("displayInfo");
 }
+
+Template.mainPage.welcomePage = function() {
+  return Session.get("welcomePage");
+}
+
 
 Template.userInformation.events = {
   'click #logOutButton' : function(event) {
@@ -30,9 +32,26 @@ Template.userInformation.events = {
 }
 
 
-Template.displayInfo.events = {
+Template.tutorial.events = {
   'click #quitInformationPanel' : function(event) {
     Session.set("displayInfo", false);
+    return false;
+  },
+  
+  'click #step1link' : function(event) {
+    $("#step1").fadeIn("slow");
+    return false;
+  },
+  
+  'click #displayInformation': function(event) {
+    Session.set("displayInfo", true);
+    return false;
+  }
+}
+
+Template.welcome.events = {
+  'click #goTutorial' : function(event) {
+    Session.set("welcomePage", false);
     return false;
   },
   
@@ -80,6 +99,7 @@ Template.loginSection.events = {
 	    var session = Players.findOne({idPlayer: u}).idSession;
 	    if(Meteor.userId() && Meteor.user().username !== "admin"){ 
 	      Session.set("displayInfo", true);
+	      Session.set("welcomePage", true);
 	      Meteor.call('insertGroup', u, session);
 	      
         }
