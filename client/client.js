@@ -10,8 +10,10 @@ Accounts.config({
   forbidClientAccountCreation : true
 });
 
+Session.set("displayInfo", true);
 
 Template.mainPage.displayInformation = function() {
+	console.log(Session.get("displayInfo"));
   return Session.get("displayInfo");
 }
 
