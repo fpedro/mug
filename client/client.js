@@ -38,10 +38,39 @@ Template.tutorial.events = {
     return false;
   },
   
+  
+  
   'click #step1link' : function(event) {
+  	$("#top").hide();
     $("#step1").fadeIn("slow");
     return false;
   },
+  
+  'click #step2link' : function(event) {
+  	$("#step1").hide();
+    $("#step2").fadeIn("slow");
+    return false;
+  },
+  
+  'click #step3link' : function(event) {
+  	$("#step2").hide();
+    $("#step3").fadeIn("slow");
+    return false;
+  },
+  
+  'click #step4link' : function(event) {
+  	$("#step3").hide();
+    $("#step4").fadeIn("slow");
+    return false;
+  },
+  
+  'click #step5link' : function(event) {
+  	$("#step4").hide();
+    $("#step5").fadeIn("slow");
+    return false;
+  },
+  
+  
   
   'click #displayInformation': function(event) {
     Session.set("displayInfo", true);

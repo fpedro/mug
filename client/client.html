@@ -30,6 +30,7 @@
   <div name="main" class="container" style="padding-top:30px;">
     <div name="informations" align="center">
       {{#if currentUser}}
+        {{> historyOfUser}}
         <!--{{> userInformation}}-->
       {{else}}
         <h2>Welcome!</h2>
@@ -61,6 +62,20 @@
   </div>
 </template>
 
+<template name="historyOfUser">
+  
+  <!--<table>
+    <tr>
+      <td>a</td>
+      <td>b</td>
+      <td>c</td>
+      <td>d</td>
+    </tr>
+  </table> -->
+  
+  
+</template>
+
 <template name="welcome">
   <h4> Welcome! </h4>
   <button type="submit" class="btn btn-default"  id="goTutorial" >proceed to tutorial</button>
@@ -68,23 +83,52 @@
 
 <template name="tutorial">
   <h2> Tutorial </h2>
+  <br>
+  <br>
   
   <div id=top>
-  <h4> In this game you will </h4>
+  <h4> In this game you will... </h4>
+  
+  <br>
   <button type="submit" class="btn btn-default"  id="step1link" >step1</button>
   </div>
   
   <div id=step1 style="display:none">
   <h1>Step 1</h1>
+  
   <br>
-  <br>
-  <br>
-  <br>
+  <button type="submit" class="btn btn-default"  id="step2link" >step2</button>
   </div>
   
-
+  <div id=step2 style="display:none">
+  <h1>Step 2</h1>
   
+  <br>
+  <button type="submit" class="btn btn-default"  id="step3link" >step3</button>
+  </div>
+  
+  <div id=step3 style="display:none">
+  <h1>Step 3</h1>
+  
+  <br>
+  <button type="submit" class="btn btn-default"  id="step4link" >step4</button>
+  </div>
+  
+  <div id=step4 style="display:none">
+  <h1>Step 4</h1>
+  
+  <br>
+  <button type="submit" class="btn btn-default"  id="step5link" >step5</button>
+  </div>
+  
+  <div id=step5 style="display:none">
+  <h1>Step 5</h1>
+  
+  <br>
   <button type="submit" class="btn btn-default"  id="quitInformationPanel" >proceed to game</button>
+  </div>
+  
+  
 </template>
 
 
@@ -236,10 +280,20 @@
 
 <template name="introduceStrategy">
   <p> Please, introduce your strategy: </p>
-  <form aligh="center" role="form">
+  <form aligh="center" role="form" oninput="amountP.value=pValue.value; amountQ.value=qValue.value;">
   <div class="form-group" style="width:20%">
-    <input id="pValue" type="number" placeholder="offer"  class="form-control"><br>
-    <input id="qValue" type="number" placeholder="accept above"  class="form-control"><br>
+  
+    <!--<input id="pValue" type="number" placeholder="offer"  class="form-control" required ><br>
+    <input id="qValue" type="number" placeholder="accept above"  class="form-control" required><br>-->
+    
+    Offer to the group 
+    <input type="range" id="pValue" name="pValue" min="1" max="10" value="1">
+    <output name="amountP" for="rangeInput">1</output>
+    
+    Accept any offer above 
+    <input type="range" id="qValue" name="qValue" min="1" max="10" value="1">
+    <output name="amountQ" for="rangeInput2">1</output>
+    
     <input id="submitStrategy" type="submit" value="submit" class="btn btn-default">
     </div>
   </form>
