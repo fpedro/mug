@@ -35,7 +35,7 @@
       {{else}}
         <h2>Welcome!</h2>
         <!--<img src="game-theory.jpg" style="padding-top:40px"><br><br>-->
-        <h5> Please sign in</h5>
+        <h5> Please sign in.</h5>
       {{/if}}  
       <br>
     </div>
@@ -77,8 +77,11 @@
 </template>
 
 <template name="welcome">
-  <h4> Welcome! </h4>
-  <button type="submit" class="btn btn-default"  id="goTutorial" >proceed to tutorial</button>
+  <h3> Welcome! </h3><br><br>
+  
+  <p> Thank you for participating in this game. </p><br>
+  <p> Before start playing, please read the tutorial that will explain you all the details to understand the game. </p><br>
+  <button type="submit" class="btn btn-default"  id="goTutorial" >Show me the tutorial</button>
 </template>
 
 <template name="tutorial">
@@ -87,42 +90,87 @@
   <br>
   
   <div id=top>
-  <h4> In this game you will... </h4>
+  
+  <p> In this game you will play a multiplayer version of a game called Ultimatum Game. </p>
+  
+  <p> You will play successive rounds. </p>
+  
+  <p> In the beginning of each round, you and each of your group mates will have 10 coins. </p>
+  
+  <p> Everyone has to offer some of those coins to the group. </p>
+  
+  <p> You and each of your group mates will also decide what offers are acceptable. </p>
+  
+ 
+
+
   
   <br>
-  <button type="submit" class="btn btn-default"  id="step1link" >step1</button>
+  <button type="submit" class="btn btn-default"  id="step1link" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step1link" >Next</button>
   </div>
   
   <div id=step1 style="display:none">
-  <h1>Step 1</h1>
+  
+  <p> acceptance criteria </p>
+  
+  <p> If an offer is accepted, the person proposing the offer will save 10 minus the value proposed. The remaining group will then divide between each member the accepted offer.</p>
+  
   
   <br>
-  <button type="submit" class="btn btn-default"  id="step2link" >step2</button>
+  <button type="submit" class="btn btn-default"  id="step2link" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step2link" >Next</button>
   </div>
   
   <div id=step2 style="display:none">
-  <h1>Step 2</h1>
+  
+  <p> If an offer is rejected, the person and the group will not gain anything! </p>
   
   <br>
-  <button type="submit" class="btn btn-default"  id="step3link" >step3</button>
+  <button type="submit" class="btn btn-default"  id="step3link" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step3link" >Next</button>
   </div>
   
   <div id=step3 style="display:none">
-  <h1>Step 3</h1>
+  
+  <p> The game has a total of {{nRounds}} rounds. You will be playing in a group composed by {{groupSize}} persons. </p>
+  
+  <p> Between each round, the groups will be shuffled. </p>
   
   <br>
-  <button type="submit" class="btn btn-default"  id="step4link" >step4</button>
+  <button type="submit" class="btn btn-default"  id="step4link" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step4link" >Next</button>
   </div>
   
   <div id=step4 style="display:none">
-  <h1>Step 4</h1>
+  
+  <p> Your total reward is the sum of what you will earn in all the {{nRounds}} rounds played. </p>
   
   <br>
-  <button type="submit" class="btn btn-default"  id="step5link" >step5</button>
+  <button type="submit" class="btn btn-default"  id="step5link" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step5link" >Next</button>
   </div>
   
   <div id=step5 style="display:none">
-  <h1>Step 5</h1>
+  
+  <p> Example of play </p>
+  
+  <p> You can review this tutorial at any time, by clicking on <i>tutorial</i> in the top of the screen. </p>
+  
+  <h3>Good Luck</h3>
+  
+  <br>
+  <button type="submit" class="btn btn-default"  id="step6link" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step6link" >Next</button>
+  </div>
+  
+  <div id=step6 style="display:none">
+  
+  <p> Example of play </p>
+  
+  <p> You can review this tutorial at any time, by clicking on <i>tutorial</i> in the top of the screen. </p>
+  
+  <h3>Good Luck</h3>
   
   <br>
   <button type="submit" class="btn btn-default"  id="quitInformationPanel" >proceed to game</button>
@@ -279,22 +327,55 @@
 </template>
 
 <template name="introduceStrategy">
-  <p> Please, introduce your strategy: </p>
+
+  <table class="table table-bordered" border="2">
+  <thead>
+    <tr> 
+  <th>Offers previously proposed</th>  
+  <th>Accepted offers above</th>  
+  <th>Previous rewards</th> 
+  </tr>
+  </thead>
+  {{#each player}}
+  <tr>
+  <td>{{pPlayed}}</td>  
+  <td>{{qPlayed}}</td>  
+  <td>{{reward}}</td> 
+  </tr>
+  {{/each}}
+  </table>
+<br>
+
+  <h4> Using the next sliders, please introduce your strategy. </h4>
+  <p> Above, you can check your previous plays.</p>
+  <p> You can decide what you will offer and what are the offers that you will accept. </p>
+  
+  <p> An offer will be accepted if <b>at least {{rule}} player(s) accept(s) it</b>. </p>
+  
+  <p> Your total reward after playing with this group will be sum of:</p>
+  
+  <p> 1) 10 minus your offer to the group, if your offer is accepted. 0 if your offer is rejected. </p>
+  <p> 2) Each of the offers of the other players in the group, if they are accepted. </p>
+  <br><br>
+  
+  
+  
   <form aligh="center" role="form" oninput="amountP.value=pValue.value; amountQ.value=qValue.value;">
   <div class="form-group" style="width:20%">
   
     <!--<input id="pValue" type="number" placeholder="offer"  class="form-control" required ><br>
     <input id="qValue" type="number" placeholder="accept above"  class="form-control" required><br>-->
     
-    Offer to the group 
+    <h4>Offer to the group: </h4>
     <input type="range" id="pValue" name="pValue" min="1" max="10" value="1">
     <output name="amountP" for="rangeInput">1</output>
     
-    Accept any offer above 
+    <h4> Accept any offer above:  </h4>
     <input type="range" id="qValue" name="qValue" min="1" max="10" value="1">
     <output name="amountQ" for="rangeInput2">1</output>
     
-    <input id="submitStrategy" type="submit" value="submit" class="btn btn-default">
+    <br>
+    <input id="submitStrategy" type="submit" value="Submit strategy" class="btn btn-default">
     </div>
   </form>
 </template>

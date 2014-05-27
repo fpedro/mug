@@ -1,6 +1,6 @@
 Meteor.startup(function(){
   if(!Players.findOne({idPlayer: "admin"})){
-    Meteor.call('createPlayer',"admin","nosession","admin",4);
+    Meteor.call('createPlayer',"admin","nosession","admin64757",4);
   }
 });
 

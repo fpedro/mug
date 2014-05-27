@@ -70,6 +70,12 @@ Template.tutorial.events = {
     return false;
   },
   
+  'click #step6link' : function(event) {
+  	$("#step5").hide();
+    $("#step6").fadeIn("slow");
+    return false;
+  },
+  
   
   
   'click #displayInformation': function(event) {
@@ -92,6 +98,10 @@ Template.welcome.events = {
 
 Template.players.player = function () {
   return Players.find({});
+}
+
+Template.introduceStrategy.player = function () {
+  return Players.find({idPlayer: Meteor.user().username});
 }
 
 Template.createUser.events = {
@@ -138,6 +148,7 @@ Template.loginSection.events = {
   }
 }
 
+
 Template.createSession.events = {
   'click #createNewSession' : function(event) {
     var idSession = document.getElementById('sessionId').value;
@@ -173,6 +184,17 @@ Template.gameArea.events = {
   }
 }
 
+Template.tutorial.nRounds = function(){
+	var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
+	var session = Sessions.findOne({idSession: idSession});
+	return session.numberRounds; 
+}
+
+Template.tutorial.groupSize = function(){
+	var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
+	var session = Sessions.findOne({idSession: idSession});
+	return session.groupSize; 
+}
 
 Template.listOfUsers.userss = function() {
   return Meteor.users.find({});
@@ -215,6 +237,13 @@ Template.gameArea.totalReward = function() {
 }
 
 //player state logic propositons (decide what to show to the player)
+
+Template.introduceStrategy.rule = function() {
+	var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
+	var session = Sessions.findOne({idSession: idSession});
+	return session.rule; 	
+}
+
 
 Template.gameArea.rewardComputed = function() {
   var state = Players.findOne({idPlayer: Meteor.user().username}).state;
