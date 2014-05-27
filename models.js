@@ -78,7 +78,6 @@ Meteor.methods({
     if(countAcceptors>=sessionRule) 
       finalReward+=(10-myP);
       
-    console.log(finalReward);
     //my group mates proposals are accepted?
     for(i=0; i<pp.length; i++){
       var numberAcceptorsProposalP = 0;
@@ -93,7 +92,6 @@ Meteor.methods({
       }
       if(numberAcceptorsProposalP>=sessionRule){
        finalReward+=parseFloat(pp[i])/(groupSize-1);
-       console.log(finalReward);
        }
     }
     

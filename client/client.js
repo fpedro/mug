@@ -39,40 +39,80 @@ Template.tutorial.events = {
   },
   
   
-  
-  'click #step1link' : function(event) {
-  	$("#top").hide();
-    $("#step1").fadeIn("slow");
+  'click #step2linkPrevious' : function(event) {
+  	$("#step2").hide();
+  	$("#step1").fadeIn();
     return false;
   },
   
-  'click #step2link' : function(event) {
+  'click #step3linkPrevious' : function(event) {
+    $("#step3").hide();
+  	$("#step2").fadeIn("slow");
+    return false;
+  },
+  
+  'click #step4linkPrevious' : function(event) {
+  	$("#step4").hide();
+  	$("#step3").fadeIn("slow");
+    return false;
+  },
+  
+  'click #step5linkPrevious' : function(event) {
+  	$("#step5").hide();
+  	$("#step4").fadeIn("slow");
+    return false;
+  },
+  
+  'click #step6linkPrevious' : function(event) {
+  	$("#step6").hide();
+  	$("#step5").fadeIn("slow");
+    return false;
+  },  
+  
+  'click #step7linkPrevious' : function(event) {
+  	$("#step7").hide();
+  	$("#step6").fadeIn("slow");
+    return false;
+  },  
+  
+  
+  
+  
+  
+  
+  'click #step1linkNext' : function(event) {
   	$("#step1").hide();
     $("#step2").fadeIn("slow");
     return false;
   },
   
-  'click #step3link' : function(event) {
+  'click #step2linkNext' : function(event) {
   	$("#step2").hide();
     $("#step3").fadeIn("slow");
     return false;
   },
   
-  'click #step4link' : function(event) {
+  'click #step3linkNext' : function(event) {
   	$("#step3").hide();
     $("#step4").fadeIn("slow");
     return false;
   },
   
-  'click #step5link' : function(event) {
+  'click #step4linkNext' : function(event) {
   	$("#step4").hide();
     $("#step5").fadeIn("slow");
     return false;
   },
   
-  'click #step6link' : function(event) {
+  'click #step5linkNext' : function(event) {
   	$("#step5").hide();
     $("#step6").fadeIn("slow");
+    return false;
+  },
+  
+  'click #step6linkNext' : function(event) {
+  	$("#step6").hide();
+    $("#step7").fadeIn("slow");
     return false;
   },
   
