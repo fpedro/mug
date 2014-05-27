@@ -1,0 +1,8 @@
+1) save against which player each one played
+2) create a final form
+3) show the previous number of persons that accepted and rejected
+4) at final, save the average of each session
+5) create bots to fill the empty spaces or create a rule to decide optimal group size
+6) put images on tutorial
+7) when reward is showed in the final of each round, detail where the value come from
+8) 
