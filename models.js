@@ -18,14 +18,14 @@ Meteor.methods({
       var newIdPlayer = idSession.concat(i.toString());
       var randNumber = Math.floor((Math.random()*100)+1);
       var password = newIdPlayer.concat(randNumber.toString());
-      Players.insert({idPlayer: newIdPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], pTimesAccepted: [], qTimesAccepted: [], actualGroup: "", password: password, state: 0});
+      Players.insert({idPlayer: newIdPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], pTimesAccepted: [], qTimesAccepted: [], whoAccepted: [], actualGroup: "", password: password, state: 0});
       var options = {username: newIdPlayer, password: password};
       Accounts.createUser(options);
     }
   },  
   
   createPlayer: function(idPlayer, idSession, password, state){
-    Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [],  pTimesAccepted: [], qTimesAccepted: [], actualGroup: "", password: password, state: state});
+    Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [],  pTimesAccepted: [], qTimesAccepted: [], whoAccepted: [], actualGroup: "", password: password, state: state});
     var options = {username: idPlayer, password: password};
     Accounts.createUser(options);
   },
@@ -50,6 +50,7 @@ Meteor.methods({
     var groupMates = Players.find({actualGroup: group, idSession: idSession});
     var pp = [];
     var qq = [];
+    var names = [];
     var myP = 0;
     var myQ = 0;
     var finalReward = 0;
@@ -57,28 +58,33 @@ Meteor.methods({
     
     groupMates.forEach(function(g) {      
       if(g.idPlayer == username){
-	myP=(g.pPlayed)[(g.pPlayed).length-1];
-	myQ=(g.qPlayed)[(g.qPlayed).length-1];
+	    myP=(g.pPlayed)[(g.pPlayed).length-1];
+	    myQ=(g.qPlayed)[(g.qPlayed).length-1];
       }
       else
       {
 	pp= pp.concat((g.pPlayed)[(g.pPlayed).length-1]);
 	qq= qq.concat((g.qPlayed)[(g.qPlayed).length-1]);
+	names = names.concat(g.idPlayer);
       }
     })
     
     //my proposal is accepted?
     var countAcceptors = 0;
+    var whoAcceptedMine = [];
     
     for(i=0; i<qq.length && countAcceptors<sessionRule; i++){
       if(qq[i]<=myP) 
         countAcceptors++;
+        whoAcceptedMine = whoAcceptedMine.concat(names[i])
     }
     
     if(countAcceptors>=sessionRule) 
       finalReward+=(10-myP);
       
     var timesSelfAccepted = 0;
+    
+    
     //my group mates proposals are accepted?
     for(i=0; i<pp.length; i++){
       var numberAcceptorsProposalP = 0;
@@ -98,10 +104,14 @@ Meteor.methods({
        finalReward+=parseFloat(pp[i])/(groupSize-1);
        }
     }
-    console.log(pTimesAccepted);
+    /*console.log(pTimesAccepted);*/
     Players.update({idPlayer: username},{$push: {pTimesAccepted: countAcceptors}});
-    console.log(qTimesAccepted);
+    
+    /*console.log(qTimesAccepted);*/
     Players.update({idPlayer: username},{$push: {qTimesAccepted: timesSelfAccepted}});
+    
+    /* names of who accepted */
+    Players.update({idPlayer: username},{$push: {whoAccepted: whoAcceptedMine}});
     
     Players.update({idPlayer: username},{$push: {reward: finalReward}});
     Players.update({idPlayer: username},{$set:  {state: 3}});
