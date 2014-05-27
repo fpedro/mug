@@ -1,5 +1,5 @@
 <head>
-  <title>Multiplayer Ultimatum Game</title>
+  <title>MUG</title>
 </head>
 
 <body>
@@ -12,7 +12,7 @@
   <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="#">Multiplayer Ultimatum Game</a>
+        <a class="navbar-brand" href="#">MUG</a>
         <a class="navbar-brand navbar-center" href="http://tecnico.ulisboa.pt/" style="padding-top:10px"> <img height="35" src="tecnico.png"></a>
         <a class="navbar-brand navbar-center" href="http://gaips.inesc-id.pt/gaips/" style="padding-top:10px"> <img height="35" src="gaipst.png"></a>
         <a class="navbar-brand navbar-center" href="http://www.ciul.ul.pt/~ATP/" style="padding-top:10px"> <img height="35" src="atp.png"></a>
@@ -90,7 +90,7 @@
   <br>
   
   <div id=step1>
-  <p> In this game you will play a multiplayer version of a game called Ultimatum Game. </p>
+  <p> In this game you must propose and accept or reject offers.</p>
   <p> You will play successive rounds in different groups. </p>
   <p> In the beginning of each round, you and each of your group mates will have 10 coins. </p>
   <p> Everyone has to offer some of those coins to the group. </p>
@@ -206,7 +206,11 @@
       {{#if strategiesInserted}}
         {{#if allGroupResponded}}
           {{#if rewardComputed}}
+           
+            <h5> Your offer was accepted by {{pTimesAccepted}} player(s). </h5>
+            <h5> You accepted the offer of {{qTimesAccepted}} player(s) of your group. </h5> <br><br>
             <h4> You earned <b>{{roundReward}}</b> this round! </h4><br><br>
+            
             {{#if allRoundsPlayed}}
             <br> <h3> You played all rounds! </h3>
               <h2> Total reward: {{totalReward}} </h2>
@@ -295,8 +299,10 @@
   <td>Actual Group</td>  
   <td>Password</td>  
   <td>State</td>  
-  <td>List of p played</td>  
-  <td>List of q played</td>  
+  <td>p played</td>  
+  <td>q played</td>
+  <td>Times accepted mine </td>  
+  <td>Times accepted others</td>    
   <td>Rewards</td> 
   </tr>
   </thead>
@@ -308,7 +314,9 @@
   <td>{{password}}</td>  
   <td>{{state}}</td>  
   <td>{{pPlayed}}</td>  
-  <td>{{qPlayed}}</td>  
+  <td>{{qPlayed}}</td> 
+  <td>{{pAcceptedBy}}</td>  
+  <td>{{qAccepted}}</td> 
   <td>{{reward}}</td> 
   </tr>
   {{/each}}
@@ -336,15 +344,19 @@
   <table class="table table-bordered" border="2">
   <thead>
     <tr> 
-  <th>Offers previously proposed</th>  
-  <th>Accepted offers above</th>  
+  <th>Offers previously proposed</th>
+  <th>How many players accepted your offer</th> 
+  <th>Accepted offers above</th>
+  <th>How many offers you accepted</th> 
   <th>Previous rewards</th> 
   </tr>
   </thead>
   {{#each player}}
   <tr>
-  <td>{{pPlayed}}</td>  
-  <td>{{qPlayed}}</td>  
+  <td>{{pPlayed}}</td>
+  <td>{{pTimesAccepted}}</td>   
+  <td>{{qPlayed}}</td>
+  <td>{{qTimesAccepted}}</td>  
   <td>{{reward}}</td> 
   </tr>
   {{/each}}

@@ -271,6 +271,16 @@ Template.gameArea.roundReward = function() {
   return rewards[rewards.length-1];
 }
 
+Template.gameArea.pTimesAccepted = function() {
+  var pTimesAccepted = Players.findOne({idPlayer: Meteor.user().username}).pTimesAccepted;
+  return pTimesAccepted[pTimesAccepted.length-1];
+}
+
+Template.gameArea.qTimesAccepted = function() {
+  var qTimesAccepted = Players.findOne({idPlayer: Meteor.user().username}).qTimesAccepted;
+  return qTimesAccepted[qTimesAccepted.length-1];
+}
+
 Template.gameArea.totalReward = function() {
   var listRewards = Players.findOne({idPlayer: Meteor.user().username}).reward;
   var totalReward = 0;

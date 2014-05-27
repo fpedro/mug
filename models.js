@@ -18,14 +18,14 @@ Meteor.methods({
       var newIdPlayer = idSession.concat(i.toString());
       var randNumber = Math.floor((Math.random()*100)+1);
       var password = newIdPlayer.concat(randNumber.toString());
-      Players.insert({idPlayer: newIdPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], actualGroup: "", password: password, state: 0});
+      Players.insert({idPlayer: newIdPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], pTimesAccepted: [], qTimesAccepted: [], actualGroup: "", password: password, state: 0});
       var options = {username: newIdPlayer, password: password};
       Accounts.createUser(options);
     }
   },  
   
   createPlayer: function(idPlayer, idSession, password, state){
-    Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [],  actualGroup: "", password: password, state: state});
+    Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [],  pTimesAccepted: [], qTimesAccepted: [], actualGroup: "", password: password, state: state});
     var options = {username: idPlayer, password: password};
     Accounts.createUser(options);
   },
@@ -78,13 +78,17 @@ Meteor.methods({
     if(countAcceptors>=sessionRule) 
       finalReward+=(10-myP);
       
+    var timesSelfAccepted = 0;
     //my group mates proposals are accepted?
     for(i=0; i<pp.length; i++){
       var numberAcceptorsProposalP = 0;
       for(j=0; j<qq.length && numberAcceptorsProposalP < sessionRule; j++){
 
         if(i==j){
-          if(pp[i]>= myQ) numberAcceptorsProposalP++;
+          if(pp[i]>= myQ){
+          	numberAcceptorsProposalP++;
+          	timesSelfAccepted++;
+          }
         }
         else{
           if(pp[i]>= qq[j]) numberAcceptorsProposalP++;
@@ -94,6 +98,10 @@ Meteor.methods({
        finalReward+=parseFloat(pp[i])/(groupSize-1);
        }
     }
+    console.log(pTimesAccepted);
+    Players.update({idPlayer: username},{$push: {pTimesAccepted: countAcceptors}});
+    console.log(qTimesAccepted);
+    Players.update({idPlayer: username},{$push: {qTimesAccepted: timesSelfAccepted}});
     
     Players.update({idPlayer: username},{$push: {reward: finalReward}});
     Players.update({idPlayer: username},{$set:  {state: 3}});
