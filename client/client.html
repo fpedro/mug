@@ -93,7 +93,7 @@
   
   <p> In this game you will play a multiplayer version of a game called Ultimatum Game. </p>
   
-  <p> You will play successive rounds. </p>
+  <p> You will play successive rounds in different groups. </p>
   
   <p> In the beginning of each round, you and each of your group mates will have 10 coins. </p>
   
@@ -112,9 +112,11 @@
   
   <div id=step1 style="display:none">
   
-  <p> acceptance criteria </p>
+  <p> An offer will be accepted if a minimum of {{rule}} persons accept it. (The person proposing can't accept his/her own proposal!) </p>
   
-  <p> If an offer is accepted, the person proposing the offer will save 10 minus the value proposed. The remaining group will then divide between each member the accepted offer.</p>
+  <p> If an offer is accepted, the person proposing the offer will save 10 minus the value proposed. </p> 
+  
+  <p> Then, then remaining group will divide between each member the accepted offer.</p>
   
   
   <br>
@@ -153,11 +155,27 @@
   
   <div id=step5 style="display:none">
   
-  <p> Example of play </p>
+  <p> For example, imagine that you are playing with Alice and Bob and the game rule would be that 2 persons have to accept one offer, for it to be overall accepted.</p>
   
-  <p> You can review this tutorial at any time, by clicking on <i>tutorial</i> in the top of the screen. </p>
+  <br><br>
   
-  <h3>Good Luck</h3>
+  <p> You propose 4. You only accept offers above or equal to 3 . </p>
+  
+  <p> Alice proposes 2. She only accepts offers above or equal to 3. </p>
+  
+  <p> Bob proposes 6. He only accepts offers above or equal to 4. </p>
+  
+  <br><br>
+  
+  <p> Your proposal is accepted! Alice and Bob both accept a proposal of 4. </p>
+  
+  <p> The proposal of Alice is rejected. You accept it, but Bob rejects as it is a very low offer! You would need two persons to accept it.</p>
+  
+  <p> The proposal of Bob is accepted! Both you and Alice accept it, as 6 is higher than 3. </p>
+  
+  <br> 
+  <h5> Your total reward in this round is 6 (10 minus your accepted proposal) + 3 (the accepted proposal of Bob diveded between you and Alice) = 9! </h5>
+  
   
   <br>
   <button type="submit" class="btn btn-default"  id="step6link" >Previous</button>
@@ -166,7 +184,7 @@
   
   <div id=step6 style="display:none">
   
-  <p> Example of play </p>
+  <p> Remember that in the instance of the game you will be playing, <b>an offer will be accepted if at least {{rule}} of the players accept it </b></p>
   
   <p> You can review this tutorial at any time, by clicking on <i>tutorial</i> in the top of the screen. </p>
   
@@ -206,10 +224,13 @@
       {{#if strategiesInserted}}
         {{#if allGroupResponded}}
           {{#if rewardComputed}}
-            <h1> your reward this round: {{roundReward}} </h1>
+            <h4> You earned <b>{{roundReward}}</b> this round! </h4>
             {{#if allRoundsPlayed}}
-              <div> your total reward: {{totalReward}} </div>
-              <div> thank you for your participation. form? </div>
+            <br> <h3> You played all rounds! </h3>
+              <h2> Total reward: {{totalReward}} </h2>
+              <br><br><h4>Thank you for your participation!</h4>
+              
+              <br><br><h5>Please fill the form and indicate your username ({{username}}) to receive the prize!</h5>
             {{else}}
                 <input id="playNextRound" type="submit" value="play next round">
             {{/if}}

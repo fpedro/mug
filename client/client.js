@@ -209,6 +209,10 @@ Template.gameArea.show = function() {
   return (Meteor.user() && Meteor.user().username !="admin"); 
 }
 
+Template.gameArea.username = function() {
+  return Meteor.user().username; 
+}
+
 Template.groupCapacity.sessions = function(){
   return Sessions.find({});
 }
@@ -239,6 +243,12 @@ Template.gameArea.totalReward = function() {
 //player state logic propositons (decide what to show to the player)
 
 Template.introduceStrategy.rule = function() {
+	var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
+	var session = Sessions.findOne({idSession: idSession});
+	return session.rule; 	
+}
+
+Template.tutorial.rule = function() {
 	var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
 	var session = Sessions.findOne({idSession: idSession});
 	return session.rule; 	
