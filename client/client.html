@@ -90,7 +90,8 @@
   <br>
   
   <div id=step1>
-  <p> In this game you must propose and accept or reject offers.</p>
+    <p style="font-size:80%"> 1/7 </p>
+  <p> In this game you must propose and accept (or reject) offers.</p>
   <p> You will play successive rounds in different groups. </p>
   <p> In the beginning of each round, you and each of your group mates will have 10 coins. </p>
   <p> Everyone has to offer some of those coins to the group. </p>
@@ -98,28 +99,31 @@
   <br>
   
   <button type="submit" class="btn btn-default"  id="step1linkNext" >Next</button>
-  <p style="font-size:80%"> 1/7 </p>
+
   </div>
   
   <div id=step2 style="display:none">
+    <p style="font-size:80%"> 2/7 </p>
   <p> An offer will be accepted if a minimum of {{rule}} of the players accept it. (The player proposing can't accept his/her own proposal!) </p>
   <p> If an offer is accepted, the person proposing the offer will save 10 minus the value proposed. </p> 
   <p> Then, the remaining group will divide between each member the accepted offer.</p>
   <br>
   <button type="submit" class="btn btn-default"  id="step2linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step2linkNext" >Next</button>
-  <p style="font-size:80%"> 2/7 </p>
+
   </div>
   
   <div id=step3 style="display:none">
+    <p style="font-size:80%"> 3/7 </p>
   <p> If an offer is rejected, the person and the group will not gain anything! </p>
   <br>
   <button type="submit" class="btn btn-default"  id="step3linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step3linkNext" >Next</button>
-  <p style="font-size:80%"> 3/7 </p>
+
   </div>
   
   <div id=step4 style="display:none">
+    <p style="font-size:80%"> 4/7 </p>
   
   <p> The game has a total of {{nRounds}} rounds. You will be playing in a group composed by {{groupSize}} player(s). </p>
   
@@ -128,22 +132,36 @@
   <br>
   <button type="submit" class="btn btn-default"  id="step4linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step4linkNext" >Next</button>
-  <p style="font-size:80%"> 4/7 </p>
+
   </div>
   
   <div id=step5 style="display:none">
+    <p style="font-size:80%"> 5/7 </p>
   
   <p> Your total reward is the sum of what you will earn in all the {{nRounds}} rounds played. </p>
   
   <br>
   <button type="submit" class="btn btn-default"  id="step5linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step5linkNext" >Next</button>
-  <p style="font-size:80%"> 5/7 </p>
+
   </div>
   
   <div id=step6 style="display:none">
+    <p style="font-size:80%"> 6/7 </p>
+   <p>In the video below, you can watch an example of round between three players.</p>
+  <br><br>
   
-  <p> <b>Example:</b> </p> <br>
+  <!--<iframe width="460" height="315" src="//www.youtube.com/embed/PSu1FPDk-ng?rel=0" frameborder="0" allowfullscreen></iframe><br><br>-->
+  
+  
+  <video width="560" height="315" controls >
+  <source src="tutorialMUG.m4v" type="video/mp4">
+  <!--<object data="tutorialMUG.m4v" width="560" height="315">
+    <embed width="560" height="315" src="movie.swf">
+  </object>-->
+  </video><br><br><br>
+  
+  <!--<p> <b>Example:</b> </p> <br>
   <p>Imagine that you are playing with Alice and Bob and that the game rules define that that 2 persons have to accept one offer, for it to be overall accepted.</p>
   <br>
   <p> You propose 4. You only accept offers above or equal to 3 . </p>
@@ -156,13 +174,14 @@
   <br> 
   <h5> Your total reward in this round is 6 + 3 = 9! </h5>
   <p> (6 = 10 minus your accepted proposal) and (3 = accepted proposal of Bob divided between you and Alice) </p>
-  <br>
+  <br>-->
   <button type="submit" class="btn btn-default"  id="step6linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step6linkNext" >Next</button>
-  <p style="font-size:80%"> 6/7 </p>
+
   </div>
   
   <div id=step7 style="display:none">
+    <p style="font-size:80%"> 7/7 </p>
   
   <p> Remember that in the instance of the game you will be playing, <b>an offer will be accepted if at least {{rule}} of the players accept it. </b></p>
   
@@ -173,7 +192,7 @@
   <br>
   <button type="submit" class="btn btn-default"  id="step7linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="quitInformationPanel" >Proceed to game</button>
-  <p style="font-size:80%"> 7/7 </p>
+
   </div>
   
   
