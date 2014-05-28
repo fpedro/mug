@@ -277,11 +277,6 @@ Template.reportRoundReward.roundReward = function() {
   return rewards[rewards.length-1];
 }
 
-Template.reportRoundReward.pTimes = function() {
-  var pTimesAccepted = Players.findOne({idPlayer: Meteor.user().username}).pTimesAccepted;
-  return pTimesAccepted;
-}
-
 Template.reportRoundReward.ownOfferReward = function() {
   var p = Players.findOne({idPlayer: Meteor.user().username}).pPlayed;
   p = p[p.length-1];
@@ -295,7 +290,6 @@ Template.reportRoundReward.roundRewardReportOther = function() {
 
 Template.reportRoundReward.roundRewardReportMine = function() {
   var rReward = Players.findOne({idPlayer: Meteor.user().username}).myOfferReport;
-  console.log(rReward[rReward.length-1]);
   return rReward[rReward.length-1];
 }
 
@@ -355,4 +349,12 @@ Template.gameArea.allGroupResponded = function(){
   var receivedStrategiesOnGroup = (Sessions.findOne({idSession: idSession}).receivedStrategiesOnGroup)[actualGroup];
   var groupSize = Sessions.findOne({idSession: idSession}).groupSize;
   return receivedStrategiesOnGroup == groupSize;
+}
+
+Template.gameArea.allRewardsCalculated = function(){
+  var actualGroup = Players.findOne({idPlayer: Meteor.user().username}).actualGroup;
+  var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
+  var alreadyCalculatedReward = (Sessions.findOne({idSession: idSession}).alreadyCalculatedReward)[actualGroup];
+  var groupSize = Sessions.findOne({idSession: idSession}).groupSize;
+  return alreadyCalculatedReward == groupSize;
 }

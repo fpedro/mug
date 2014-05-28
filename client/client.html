@@ -238,7 +238,12 @@
               
               <br><br><h5>Please fill the form and indicate your username ({{username}}) to receive the prize!</h5>
             {{else}}
+            
+                {{#if allRewardsCalculated}}
                 <input id="playNextRound" type="submit" value="Play next round" class="btn btn-default">
+                {{else}}
+                <p> Please wait until all rewards are calculated and you are ready to be inserted in a new group... </p>
+                {{/if}}
             {{/if}}
           {{else}}
             <h5> All the players of your group submited their strategies! </h5> <br>
@@ -338,9 +343,7 @@
   <td>Password</td>  
   <td>State</td>  
   <td>p played</td>  
-  <td>q played</td>
-  <td>Times accepted mine </td>
-  <td>Who Accepted Mine</td>   
+  <td>q played</td>  
   <td>Rewards</td> 
   </tr>
   </thead>
@@ -352,9 +355,7 @@
   <td>{{password}}</td>  
   <td>{{state}}</td>  
   <td>{{pPlayed}}</td>  
-  <td>{{qPlayed}}</td> 
-  <td>{{pTimesAccepted}}</td>
-  <td>{{whoAccepted}}</td>  
+  <td>{{qPlayed}}</td>  
   <td>{{reward}}</td> 
   </tr>
   {{/each}}
@@ -366,12 +367,12 @@
   <table class="table table-condensed" border="1">
   <thead>
     <tr>
-    <td>Session ID</td> <td>Rule (A)</td> <td>Groups and Remaining Capacity</td>  <td>Number of saved strategies on each group </td>
+    <td>Session ID</td> <td>Rule (A)</td> <td>Groups and Remaining Capacity</td>  <td>Number of saved strategies on each group </td> <td> Number rewards calculated </td>
     </tr>  
     </thead>
   {{#each sessions}}
     <tr>
-    <td>{{idSession}}</td> <td>{{rule}}</td>  <td>{{groupCapacity}}</td>  <td>{{receivedStrategiesOnGroup}}</td>
+    <td>{{idSession}}</td> <td>{{rule}}</td>  <td>{{groupCapacity}}</td>  <td>{{receivedStrategiesOnGroup}}</td> <td>{{alreadyCalculatedReward}}</td>
     </tr>  
   {{/each}}
   </table>

@@ -7,25 +7,27 @@ Meteor.methods({
   
   //admin methods
   createSession: function(idSession, populationSize, groupSize, numberRounds, date, rule){
-    Sessions.insert({idSession: idSession, populationSize: populationSize, groupSize: groupSize, groupCapacity: [], receivedStrategiesOnGroup: [], numberRounds: numberRounds, date: date, rule: rule});
+    Sessions.insert({idSession: idSession, populationSize: populationSize, groupSize: groupSize, groupCapacity: [], receivedStrategiesOnGroup: [], alreadyCalculatedReward: [], numberRounds: numberRounds, date: date, rule: rule});
     for(i = 0; i<(populationSize/groupSize)*numberRounds; i++){
       Sessions.update({idSession: idSession} ,{$push: {groupCapacity: groupSize}});
       Sessions.update({idSession: idSession} ,{$push: {receivedStrategiesOnGroup: 0}});
+      Sessions.update({idSession: idSession} ,{$push: {alreadyCalculatedReward: 0}});
     }
 
     //create necessary users
     for(i = 0; i<populationSize; i++){
       var newIdPlayer = idSession.concat(i.toString());
-      var randNumber = Math.floor((Math.random()*100)+1);
+      //var randNumber = Math.floor((Math.random()*100)+1);
+      var randNumber = 1;
       var password = newIdPlayer.concat(randNumber.toString());
-      Players.insert({idPlayer: newIdPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [],  pTimesAccepted: 0, whoAccepted: [], actualGroup: "", password: password, state: 0});
+      Players.insert({idPlayer: newIdPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [], actualGroup: "", password: password, state: 0});
       var options = {username: newIdPlayer, password: password};
       Accounts.createUser(options);
     }
   },  
   
   createPlayer: function(idPlayer, idSession, password, state){
-    Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [], pTimesAccepted: 0, whoAccepted: [], actualGroup: "", password: password, state: state});
+    Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [], actualGroup: "", password: password, state: state});
     var options = {username: idPlayer, password: password};
     Accounts.createUser(options);
   },
@@ -47,6 +49,7 @@ Meteor.methods({
     var sessionRule = Sessions.findOne({idSession: idSession}).rule;
     var groupSize = Sessions.findOne({idSession: idSession}).groupSize;
     var group = Players.findOne({idPlayer: username}).actualGroup;
+    var roundNumber = 0;
     var groupMates = Players.find({actualGroup: group, idSession: idSession});
     var pp = [];
     var qq = [];
@@ -72,12 +75,10 @@ Meteor.methods({
 
     //my proposal is accepted?
     var countAcceptors = 0;
-    var whoAcceptedMine = [];
     
     for(i=0; i<qq.length && countAcceptors<sessionRule; i++){
       if(qq[i]<=myP) 
         countAcceptors++;
-        whoAcceptedMine = whoAcceptedMine.concat(names[i])
     }
 
     var othersReport = [];
@@ -119,17 +120,19 @@ Meteor.methods({
        
     }
     
-    /*console.log(pTimesAccepted);*/
-    Players.update({idPlayer: username},{$set: {pTimesAccepted: countAcceptors}});
-    
     /* names of who accepted */
-    Players.update({idPlayer: username},{$push: {whoAccepted: [whoAcceptedMine]}});
     
     Players.update({idPlayer: username},{$push: {reward: finalReward}});
     Players.update({idPlayer: username},{$set:  {state: 3}});
     
     Players.update({idPlayer: username},{$push:  {othersOfferReport: othersReport}});
     Players.update({idPlayer: username},{$push:  {myOfferReport: myReport}});
+    
+    
+    var acr = Sessions.findOne({idSession: idSession}).alreadyCalculatedReward;
+    acr[group]++;
+    Sessions.update({idSession: idSession},{$set: {alreadyCalculatedReward: acr}});
+    
     
     return false;
   }
