@@ -18,14 +18,14 @@ Meteor.methods({
       var newIdPlayer = idSession.concat(i.toString());
       var randNumber = Math.floor((Math.random()*100)+1);
       var password = newIdPlayer.concat(randNumber.toString());
-      Players.insert({idPlayer: newIdPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], pTimesAccepted: [], qTimesAccepted: [], whoAccepted: [], actualGroup: "", password: password, state: 0});
+      Players.insert({idPlayer: newIdPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [],  pTimesAccepted: 0, whoAccepted: [], actualGroup: "", password: password, state: 0});
       var options = {username: newIdPlayer, password: password};
       Accounts.createUser(options);
     }
   },  
   
   createPlayer: function(idPlayer, idSession, password, state){
-    Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [],  pTimesAccepted: [], qTimesAccepted: [], whoAccepted: [], actualGroup: "", password: password, state: state});
+    Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [], pTimesAccepted: 0, whoAccepted: [], actualGroup: "", password: password, state: state});
     var options = {username: idPlayer, password: password};
     Accounts.createUser(options);
   },
@@ -68,7 +68,8 @@ Meteor.methods({
 	names = names.concat(g.idPlayer);
       }
     })
-    
+
+
     //my proposal is accepted?
     var countAcceptors = 0;
     var whoAcceptedMine = [];
@@ -78,12 +79,19 @@ Meteor.methods({
         countAcceptors++;
         whoAcceptedMine = whoAcceptedMine.concat(names[i])
     }
-    
-    if(countAcceptors>=sessionRule) 
-      finalReward+=(10-myP);
+
+    var othersReport = [];
+    var myReport = []; 
       
-    var timesSelfAccepted = 0;
+    if(countAcceptors>=sessionRule){ 
+      finalReward+=(10-myP);
+      myReport = myReport.concat({reward:10-myP, acceptors: countAcceptors});
+    }
     
+    else{
+      myReport = myReport.concat({reward:0, acceptors: countAcceptors});
+    }
+   
     
     //my group mates proposals are accepted?
     for(i=0; i<pp.length; i++){
@@ -93,28 +101,36 @@ Meteor.methods({
         if(i==j){
           if(pp[i]>= myQ){
           	numberAcceptorsProposalP++;
-          	timesSelfAccepted++;
           }
         }
         else{
           if(pp[i]>= qq[j]) numberAcceptorsProposalP++;
         }
       }
+      
       if(numberAcceptorsProposalP>=sessionRule){
        finalReward+=parseFloat(pp[i])/(groupSize-1);
+       othersReport = othersReport.concat({id: names[i], offer: (pp[i]*1.0/qq.length), acceptances: numberAcceptorsProposalP});
        }
+       else{
+       othersReport = othersReport.concat({id: names[i], offer: 0, acceptances: numberAcceptorsProposalP});
+       	
+       }
+       
     }
-    /*console.log(pTimesAccepted);*/
-    Players.update({idPlayer: username},{$push: {pTimesAccepted: countAcceptors}});
     
-    /*console.log(qTimesAccepted);*/
-    Players.update({idPlayer: username},{$push: {qTimesAccepted: timesSelfAccepted}});
+    /*console.log(pTimesAccepted);*/
+    Players.update({idPlayer: username},{$set: {pTimesAccepted: countAcceptors}});
     
     /* names of who accepted */
-    Players.update({idPlayer: username},{$push: {whoAccepted: whoAcceptedMine}});
+    Players.update({idPlayer: username},{$push: {whoAccepted: [whoAcceptedMine]}});
     
     Players.update({idPlayer: username},{$push: {reward: finalReward}});
     Players.update({idPlayer: username},{$set:  {state: 3}});
+    
+    Players.update({idPlayer: username},{$push:  {othersOfferReport: othersReport}});
+    Players.update({idPlayer: username},{$push:  {myOfferReport: myReport}});
+    
     return false;
   }
   

@@ -154,12 +154,15 @@
   <!--<iframe width="460" height="315" src="//www.youtube.com/embed/PSu1FPDk-ng?rel=0" frameborder="0" allowfullscreen></iframe><br><br>-->
   
   
+  
   <video width="560" height="315" controls >
-  <source src="tutorialMUG.m4v" type="video/mp4">
-  <!--<object data="tutorialMUG.m4v" width="560" height="315">
-    <embed width="560" height="315" src="movie.swf">
-  </object>-->
+  <source src="tutorialMUG.mp4" type="video/mp4">
+  <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab" data="tutorialMUG.mp4" width="560" height="315">
+    <embed width="560" height="315" src="tutorialMUG.mp4">
+  </object>
   </video><br><br><br>
+  
+  <p style="font-size:80%">(or, on <a target="_blank" href="http://youtu.be/PSu1FPDk-ng" >youtube</a>)</p><br>
   
   <!--<p> <b>Example:</b> </p> <br>
   <p>Imagine that you are playing with Alice and Bob and that the game rules define that that 2 persons have to accept one offer, for it to be overall accepted.</p>
@@ -226,14 +229,12 @@
         {{#if allGroupResponded}}
           {{#if rewardComputed}}
            
-            <h5> Your offer was accepted by {{pTimesAccepted}} player(s). </h5>
-            <h5> You accepted the offer of {{qTimesAccepted}} player(s) of your group. </h5> <br><br>
-            <h4> You earned <b>{{roundReward}}</b> this round! </h4><br><br>
+            {{> reportRoundReward}}
             
             {{#if allRoundsPlayed}}
             <br> <h3> You played all rounds! </h3>
-              <h2> Total reward: {{totalReward}} </h2>
-              <br><br><h4>Thank you for your participation!</h4>
+            <h2> Total reward: {{totalReward}} </h2>
+            <br><br><h4>Thank you for your participation!</h4>
               
               <br><br><h5>Please fill the form and indicate your username ({{username}}) to receive the prize!</h5>
             {{else}}
@@ -260,6 +261,24 @@
   {{/if}}
   
 </template>
+
+
+<template name="reportRoundReward">
+
+  {{#each roundRewardReportMine}}
+  <p> <b>- Your offer was accepted by {{acceptors}} player(s) so you earned {{reward}}.</b>  </p>
+  {{/each}}
+  
+  {{#each roundRewardReportOther}}
+    <p> - The offer of {{id}} was accepted by {{acceptances}} player(s) so you earned {{offer}} </p>
+  {{/each}}
+  
+  <br><h3> You earned <b>{{roundReward}}</b> this round! </h3><br><br>
+  
+  
+  
+</template>
+
 
 <template name="waitOtherStrategies">
   <h5> Please wait until all the players of your group submit their strategies... </h5>
@@ -321,8 +340,7 @@
   <td>p played</td>  
   <td>q played</td>
   <td>Times accepted mine </td>
-  <td>Who Accepted Mine</td>  
-  <td>Times accepted others</td>     
+  <td>Who Accepted Mine</td>   
   <td>Rewards</td> 
   </tr>
   </thead>
@@ -337,7 +355,6 @@
   <td>{{qPlayed}}</td> 
   <td>{{pTimesAccepted}}</td>
   <td>{{whoAccepted}}</td>  
-  <td>{{qTimesAccepted}}</td> 
   <td>{{reward}}</td> 
   </tr>
   {{/each}}
@@ -362,22 +379,18 @@
 
 <template name="introduceStrategy">
 
-  <table class="table table-bordered" border="2">
+  <table class="table" border="2">
   <thead>
     <tr> 
-  <th>Offers previously proposed</th>
-  <th>How many players accepted your offer</th> 
-  <th>Accepted offers above</th>
-  <th>How many offers you accepted</th> 
-  <th>Previous rewards</th> 
+  <th>Your offers in previous rounds</th>
+  <th>Your acceptance minimum in previous rounds</th>
+  <th>Your previous rewards</th> 
   </tr>
   </thead>
   {{#each player}}
   <tr>
-  <td>{{pPlayed}}</td>
-  <td>{{pTimesAccepted}}</td>   
+  <td>{{pPlayed}}</td>  
   <td>{{qPlayed}}</td>
-  <td>{{qTimesAccepted}}</td>  
   <td>{{reward}}</td> 
   </tr>
   {{/each}}
