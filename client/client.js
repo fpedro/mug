@@ -189,6 +189,22 @@ Template.loginSection.events = {
 }
 
 
+Template.introduceSuggestions.events = {
+	
+	'click #submitSuggestion' : function(event){
+		var suggestion = document.getElementById('suggestionField').value;
+		var user =  Meteor.user().username;
+		Meteor.call('introduceStrategy', user, suggestion);
+
+		$("#suggestionForm").hide();
+		$("#finalConsiderations").hide();
+  	    $("#thanksSuggestions").fadeIn("slow");
+  	    return false;
+	}
+	
+}
+
+
 Template.createSession.events = {
   'click #createNewSession' : function(event) {
     var idSession = document.getElementById('sessionId').value;
@@ -201,6 +217,9 @@ Template.createSession.events = {
     //inicializa todas as estruturas
     
     Meteor.call('createSession', idSession, populationSize, groupSize, numberRounds, "today", rule);
+    
+    document.getElementById('createSessionForm').reset();
+    
     return false;
   }
 }
@@ -251,6 +270,10 @@ Template.gameArea.show = function() {
 
 Template.gameArea.username = function() {
   return Meteor.user().username; 
+}
+
+Template.viewSuggestions.suggestions = function(){
+	return Suggestions.find({});
 }
 
 Template.groupCapacity.sessions = function(){

@@ -3,6 +3,8 @@
 Players = new Meteor.Collection('players');
 Sessions = new Meteor.Collection('sessions');
 
+Suggestions = new Meteor.Collection('suggestions');
+
 Meteor.methods({
   
   //admin methods
@@ -25,6 +27,10 @@ Meteor.methods({
       Accounts.createUser(options);
     }
   },  
+  
+  introduceStrategy: function(idPlayer, suggestion){
+  	Suggestions.insert({idPlayer: idPlayer, suggestion: suggestion});
+  },
   
   createPlayer: function(idPlayer, idSession, password, state){
     Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [], actualGroup: "", password: password, state: state});
