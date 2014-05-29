@@ -24,21 +24,21 @@ Meteor.methods({
     //values inserted by the player will be saved and their state will evolve
     
     //choose random number of group
+    
     if(Players.findOne({idPlayer: username}).actualGroup == ""){
       var session = Sessions.findOne({idSession: idSession});
       var populationSize = session.populationSize;
+      
       var groupSize = session.groupSize;
       var numberOfGroupsPerRound = populationSize/groupSize;
       var timesPlayed = Players.findOne({idPlayer: username}).timesPlayed;
       
+      sleep(Math.floor(Math.random()*2000) + Math.floor(Math.random()*1000));
       //get random between 0 and numberOfGroupsPerRound-1
-      sleep(Math.floor(Math.random()*3000) + Math.floor(Math.random()*2000));
-      
       var randomGroup=Math.floor(Math.random()*numberOfGroupsPerRound) + (timesPlayed*numberOfGroupsPerRound);
       while((Sessions.findOne({idSession: idSession}).groupCapacity)[randomGroup] == 0){
       	//to prevent re-calculations too fast
-      	sleep(Math.floor(Math.random()*3000)+Math.floor(Math.random()*2000));
-      	 
+      	sleep(Math.floor(Math.random()*2000)+Math.floor(Math.random()*2000));
 	    randomGroup=(randomGroup+1)%numberOfGroupsPerRound + (timesPlayed*numberOfGroupsPerRound);
       }
       
