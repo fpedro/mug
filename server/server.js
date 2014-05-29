@@ -32,11 +32,13 @@ Meteor.methods({
       var timesPlayed = Players.findOne({idPlayer: username}).timesPlayed;
       
       //get random between 0 and numberOfGroupsPerRound-1
-      sleep(Math.floor(Math.random()*2000) + Math.floor(Math.random()*1000));
+      sleep(Math.floor(Math.random()*3000) + Math.floor(Math.random()*2000));
+      
       var randomGroup=Math.floor(Math.random()*numberOfGroupsPerRound) + (timesPlayed*numberOfGroupsPerRound);
       while((Sessions.findOne({idSession: idSession}).groupCapacity)[randomGroup] == 0){
       	//to prevent re-calculations too fast
-      	sleep(Math.floor(Math.random()*2000)+Math.floor(Math.random()*1000)); 
+      	sleep(Math.floor(Math.random()*3000)+Math.floor(Math.random()*2000));
+      	 
 	    randomGroup=(randomGroup+1)%numberOfGroupsPerRound + (timesPlayed*numberOfGroupsPerRound);
       }
       

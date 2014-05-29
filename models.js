@@ -2,7 +2,6 @@
 
 Players = new Meteor.Collection('players');
 Sessions = new Meteor.Collection('sessions');
-
 Suggestions = new Meteor.Collection('suggestions');
 
 Meteor.methods({
@@ -85,7 +84,7 @@ Meteor.methods({
     var countAcceptors = 0;
     
     for(i=0; i<qq.length /*&& countAcceptors<sessionRule*/; i++){
-      if(qq[i]<=myP) 
+      if(parseInt(qq[i])<=parseInt(myP)) 
         countAcceptors++;
     }
 
@@ -93,8 +92,8 @@ Meteor.methods({
     var myReport = []; 
       
     if(countAcceptors>=sessionRule){ 
-      finalReward+=(10-myP);
-      myReport = myReport.concat({reward:10-myP, acceptors: countAcceptors});
+      finalReward+=(10-parseInt(myP));
+      myReport = myReport.concat({reward:10-parseInt(myP), acceptors: countAcceptors});
     }
     
     else{
@@ -108,18 +107,20 @@ Meteor.methods({
       for(j=0; j<qq.length /*&& numberAcceptorsProposalP < sessionRule*/; j++){
 
         if(i==j){
-          if(parseInt(pp[i])>= parseInt(myQ)){
+          if(parseInt(pp[i]) >= parseInt(myQ)){
           	numberAcceptorsProposalP++;
           }
         }
         else{
-          if(parseInt(pp[i]) >= parseInt(qq[j])) numberAcceptorsProposalP++;
+          if(parseInt(pp[i]) >= parseInt(qq[j])){ 
+            numberAcceptorsProposalP++;
+          }
         }
       }
       
       if(numberAcceptorsProposalP>=sessionRule){
        finalReward+=parseFloat(pp[i])/(groupSize-1);
-       othersReport = othersReport.concat({id: names[i], offer: (pp[i]*1.0/qq.length), acceptances: numberAcceptorsProposalP});
+       othersReport = othersReport.concat({id: names[i], offer: (parseInt(pp[i])*1.0/qq.length), acceptances: numberAcceptorsProposalP});
        }
        else{
        othersReport = othersReport.concat({id: names[i], offer: 0, acceptances: numberAcceptorsProposalP});
