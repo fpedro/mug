@@ -69,9 +69,11 @@ Meteor.methods({
       if(g.idPlayer == username){
 	    myP=(g.pPlayed)[(g.pPlayed).length-1];
 	    myQ=(g.qPlayed)[(g.qPlayed).length-1];
+	    
       }
       else
       {
+      	
 	pp= pp.concat((g.pPlayed)[(g.pPlayed).length-1]);
 	qq= qq.concat((g.qPlayed)[(g.qPlayed).length-1]);
 	names = names.concat(g.idPlayer);
@@ -82,7 +84,7 @@ Meteor.methods({
     //my proposal is accepted?
     var countAcceptors = 0;
     
-    for(i=0; i<qq.length && countAcceptors<sessionRule; i++){
+    for(i=0; i<qq.length /*&& countAcceptors<sessionRule*/; i++){
       if(qq[i]<=myP) 
         countAcceptors++;
     }
@@ -103,15 +105,15 @@ Meteor.methods({
     //my group mates proposals are accepted?
     for(i=0; i<pp.length; i++){
       var numberAcceptorsProposalP = 0;
-      for(j=0; j<qq.length && numberAcceptorsProposalP < sessionRule; j++){
+      for(j=0; j<qq.length /*&& numberAcceptorsProposalP < sessionRule*/; j++){
 
         if(i==j){
-          if(pp[i]>= myQ){
+          if(parseInt(pp[i])>= parseInt(myQ)){
           	numberAcceptorsProposalP++;
           }
         }
         else{
-          if(pp[i]>= qq[j]) numberAcceptorsProposalP++;
+          if(parseInt(pp[i]) >= parseInt(qq[j])) numberAcceptorsProposalP++;
         }
       }
       

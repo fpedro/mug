@@ -8,6 +8,15 @@ Accounts.config({
   forbidClientAccountCreation : true
 });
 
+function sleep(milliseconds) {
+  var start = new Date().getTime();
+  for (var i = 0; i < 1e7; i++) {
+    if ((new Date().getTime() - start) > milliseconds){
+      break;
+    }
+  }
+}
+
 Meteor.methods({
   
   insertGroup: function(username, idSession){
@@ -23,9 +32,12 @@ Meteor.methods({
       var timesPlayed = Players.findOne({idPlayer: username}).timesPlayed;
       
       //get random between 0 and numberOfGroupsPerRound-1
+      sleep(Math.floor(Math.random()*2000) + Math.floor(Math.random()*1000));
       var randomGroup=Math.floor(Math.random()*numberOfGroupsPerRound) + (timesPlayed*numberOfGroupsPerRound);
-      while((Sessions.findOne({idSession: idSession}).groupCapacity)[randomGroup] == 0){ 
-	randomGroup=(randomGroup+1)%numberOfGroupsPerRound + (timesPlayed*numberOfGroupsPerRound);
+      while((Sessions.findOne({idSession: idSession}).groupCapacity)[randomGroup] == 0){
+      	//to prevent re-calculations too fast
+      	sleep(Math.floor(Math.random()*2000)+Math.floor(Math.random()*1000)); 
+	    randomGroup=(randomGroup+1)%numberOfGroupsPerRound + (timesPlayed*numberOfGroupsPerRound);
       }
       
       //decrease capacity on session variable group capacity    
