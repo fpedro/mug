@@ -225,49 +225,30 @@
       
 <template name="gameArea">
   {{#if show}}
-    {{#if groupIsFull}}
-      {{#if strategiesInserted}}
-        {{#if allGroupResponded}}
-          {{#if rewardComputed}}
-           
-            {{> reportRoundReward}}
-            
-            {{#if allRoundsPlayed}}
+    {{#if strategiesInserted}} <!-- p.size >= reward and state > 1 -->
+      {{#if allAgentsResponded}} <!-- plays size = population -->
+        {{#if rewardComputed}} <!-- state = 2 -->
+          {{> reportRoundReward}}
+          {{#if allRoundsPlayed}}
             <br> <h3> You played all rounds! </h3>
             <h2> Total reward: {{totalReward}} </h2>
             <br><br><h4>Thank you for your participation!</h4>
-              
-              
-              {{> introduceSuggestions}}
-              
-            {{else}}
-            
-                {{#if allRewardsCalculated}}
-                <input id="playNextRound" type="submit" value="Play next round" class="btn btn-default">
-                {{else}}
-                <p> Please wait until all rewards are calculated and you are ready to be inserted in a new group... </p>
-                {{/if}}
-            {{/if}}
+            {{> introduceSuggestions}}
           {{else}}
-            <h5> All the players of your group submited their strategies! </h5> <br>
-            <h5> Click below to see what you earned in this round. </h5> <br>
-            <input id="updateRoundReward" type="submit" value="Compute reward" class="btn btn-default">
+            <input id="playNextRound" type="submit" value="Play next round" class="btn btn-default">
           {{/if}}
         {{else}}
-          {{> waitOtherStrategies}}
+          <h5> All the players of your group submited their strategies! </h5> <br>
+          <h5> Click below to see what you earned in this round. </h5> <br>
+          <input id="updateRoundReward" type="submit" value="Compute reward" class="btn btn-default">
         {{/if}}
       {{else}}
-        {{> introduceStrategy}}
+        {{> waitOtherStrategies}}
       {{/if}}
     {{else}}
-      <h4> Waiting for other players to join your group... </h4>
-      <!-- <strong>So far, in your group there are:</strong>
-      {{#each groupMates}}
-        {{idPlayer}} 
-      {{/each}}-->
+      {{> introduceStrategy}} <!-- state = 0 -->
     {{/if}}
   {{/if}}
-  
 </template>
 
 
@@ -343,7 +324,6 @@
     <tr>
   <td>Player ID</td>
   <td>Rounds Played</td>  
-  <td>Actual Group</td>  
   <td>Password</td>  
   <td>State</td>  
   <td>p played</td>  
@@ -354,8 +334,7 @@
   {{#each player}}
   <tr>
   <td>{{idPlayer}}</td>
-  <td>{{timesPlayed}}</td>  
-  <td>{{actualGroup}}</td>  
+  <td>{{timesPlayed}}</td> 
   <td>{{password}}</td>  
   <td>{{state}}</td>  
   <td>{{pPlayed}}</td>  
@@ -371,12 +350,12 @@
   <table class="table table-condensed" border="1">
   <thead>
     <tr>
-    <td>Session ID</td> <td>Rule (A)</td> <td>Groups and Remaining Capacity</td>  <td>Number of saved strategies on each group </td> <td> Number rewards calculated </td>
+    <td>Session ID</td> <td>Rule (A)</td> <td>Groups Size</td> <td> Date </td>
     </tr>  
     </thead>
   {{#each sessions}}
     <tr>
-    <td>{{idSession}}</td> <td>{{rule}}</td>  <td>{{groupCapacity}}</td>  <td>{{receivedStrategiesOnGroup}}</td> <td>{{alreadyCalculatedReward}}</td>
+    <td>{{idSession}}</td> <td>{{rule}}</td> <td>{{groupSize}}</td> <td>{{date}}</td>
     </tr>  
   {{/each}}
   </table>
@@ -398,7 +377,8 @@
   <h5>Please fill the form and indicate your username ({{username}}) to receive the prize!</h5><br>
   
   <form role="form" id="introduceSuggestions">
-  <textarea id="suggestionField" rows="4" cols="50" class="form-control"> Suggestion </textarea><br>
+  <label for="suggestionField">Suggestions</label>
+  <textarea id="suggestionField" rows="4" cols="50" class="form-control"> </textarea><br>
   <!--<button type="submit" class="btn btn-default"  id="submitSuggestion" > Submit suggestion </button><br>-->
   <input id="submitSuggestion" type="submit" value="Submit suggestion" class="btn btn-default">
   </form>

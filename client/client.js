@@ -144,21 +144,16 @@ Template.introduceStrategy.player = function () {
   return Players.find({idPlayer: Meteor.user().username});
 }
 
-Template.createUser.events = {
-  'click #createNewUser' : function(event) {
-    var name = document.getElementById('newUserId').value;
-    var session = document.getElementById('newUserSessionId').value;
-    Meteor.call('createPlayer', name, session, "password", 0);
-    return false;
-  }
-}
 
 
 Template.introduceStrategy.events = {
   'click #submitStrategy' : function(event) {
     var p = document.getElementById('pValue').value;
     var q = document.getElementById('qValue').value;
-    Meteor.call('saveStrategy', Meteor.user().username, p, q);
+    var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
+    var round = Players.findOne({idPlayer: Meteor.user().username}).pPlayed.length;
+    Meteor.call('saveStrategy', Meteor.user().username, p, q, idSession, round);
+    Session.set("state", 1);
     return false;
   }
 }
@@ -179,6 +174,7 @@ Template.loginSection.events = {
 	    if(Meteor.userId() && Meteor.user().username !== "admin"){ 
 	      Session.set("displayInfo", true);
 	      Session.set("welcomePage", true);
+	      Session.set("state", 0);
 	      Meteor.call('insertGroup', u, session);
 	      
         }
@@ -188,6 +184,9 @@ Template.loginSection.events = {
   }
 }
 
+Template.introduceSuggestions.username= function(){
+  return Meteor.user().username;
+}
 
 Template.introduceSuggestions.events = {
 	
@@ -224,22 +223,25 @@ Template.createSession.events = {
   }
 }
 
+Template.gameArea.state = function(){
+  return Session.get("state");
+}
+
 Template.gameArea.events = {
-  'click #incrementstate' : function(event) {
-    Meteor.call('incState', Meteor.user().username); 
-  },
   
   'click #updateRoundReward' : function(event) {
     var user =  Meteor.user().username;
     var session = Players.findOne({idPlayer: user}).idSession;
-    Meteor.call('updateRoundReward', user, session);
+    var round = Players.findOne({idPlayer: Meteor.user().username}).reward.length;
+    Meteor.call('updateRoundReward', user, session, round);
+    Session.set("state", 2);
   },
   
   'click #playNextRound' : function(event) {
     var user =  Meteor.user().username;
     var session = Players.findOne({idPlayer: user}).idSession;
     Meteor.call('prepareNextRound', user, session);
-    Meteor.call('insertGroup', user, session);
+    Session.set("state", 0);
   }
 }
 
@@ -322,7 +324,7 @@ Template.gameArea.totalReward = function() {
   for(i=0; i<listRewards.length; i++){
     totalReward = totalReward + parseFloat(listRewards[i]);
   }
-  return totalReward;
+  return Math.round(totalReward*100)/100;
 }
 
 //player state logic propositons (decide what to show to the player)
@@ -340,15 +342,18 @@ Template.tutorial.rule = function() {
 }
 
 
+
 Template.gameArea.rewardComputed = function() {
-  var state = Players.findOne({idPlayer: Meteor.user().username}).state;
-  return (state === 3);
+  var rewards = Players.findOne({idPlayer: Meteor.user().username}).reward.length;
+  var strategies = Players.findOne({idPlayer: Meteor.user().username}).pPlayed.length; 
+  return rewards == strategies && Session.get("state")==2;
 }
 
 Template.gameArea.allRoundsPlayed = function() {
-  var timesPlayed = Players.findOne({idPlayer: Meteor.user().username}).timesPlayed;
+  var rewards = Players.findOne({idPlayer: Meteor.user().username}).reward.length;
   var numberRounds = Sessions.findOne({idSession: Players.findOne({idPlayer: Meteor.user().username}).idSession}).numberRounds;
-  return (timesPlayed == numberRounds);
+  
+  return (rewards == numberRounds);
 }
 
 Template.gameArea.groupIsFull = function(){
@@ -362,22 +367,20 @@ Template.gameArea.groupIsFull = function(){
 }
 
 Template.gameArea.strategiesInserted = function(){
-  var state = Players.findOne({idPlayer: Meteor.user().username}).state;
-  return state >= 2;
+	var pSize = Players.findOne({idPlayer: Meteor.user().username}).pPlayed.length;
+	var rSize = Players.findOne({idPlayer: Meteor.user().username}).reward.length;
+  return (Session.get("state") > 0) && (pSize >= rSize);
 }
 
-Template.gameArea.allGroupResponded = function(){
-  var actualGroup = Players.findOne({idPlayer: Meteor.user().username}).actualGroup;
+Template.gameArea.allAgentsResponded = function(){
   var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
-  var receivedStrategiesOnGroup = (Sessions.findOne({idSession: idSession}).receivedStrategiesOnGroup)[actualGroup];
-  var groupSize = Sessions.findOne({idSession: idSession}).groupSize;
-  return receivedStrategiesOnGroup == groupSize;
+  var round = Players.findOne({idPlayer: Meteor.user().username}).reward.length;
+  var receivedStrategies = Plays.find({idSession: idSession, round: round}).count();
+  var populationSize = Sessions.findOne({idSession: idSession}).populationSize;
+  
+  return (receivedStrategies >= populationSize) || (Session.get("state")==2);
 }
 
 Template.gameArea.allRewardsCalculated = function(){
-  var actualGroup = Players.findOne({idPlayer: Meteor.user().username}).actualGroup;
-  var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
-  var alreadyCalculatedReward = (Sessions.findOne({idSession: idSession}).alreadyCalculatedReward)[actualGroup];
-  var groupSize = Sessions.findOne({idSession: idSession}).groupSize;
-  return alreadyCalculatedReward == groupSize;
+  return true;
 }

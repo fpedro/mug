@@ -1,5 +1,5 @@
 <head>
-  <title>Multiplayer Ultimatum Game</title>
+  <title>MUG</title>
 </head>
 
 <body>
@@ -12,7 +12,11 @@
   <nav class="navbar navbar-default" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header">
-        <a class="navbar-brand" href="#">Multiplayer Ultimatum Game</a>
+        <a class="navbar-brand" href="#">MUG</a>
+        <a class="navbar-brand navbar-center" href="http://tecnico.ulisboa.pt/" style="padding-top:10px"> <img height="35" src="tecnico.png"></a>
+        <a class="navbar-brand navbar-center" href="http://gaips.inesc-id.pt/gaips/" style="padding-top:10px"> <img height="35" src="gaipst.png"></a>
+        <a class="navbar-brand navbar-center" href="http://www.ciul.ul.pt/~ATP/" style="padding-top:10px"> <img height="35" src="atp.png"></a>
+        
         {{#if currentUser}}
           {{> userInformation}}
         {{else}}
@@ -26,11 +30,12 @@
   <div name="main" class="container" style="padding-top:30px;">
     <div name="informations" align="center">
       {{#if currentUser}}
+        {{> historyOfUser}}
         <!--{{> userInformation}}-->
       {{else}}
-        <h3> Welcome to this behavioral experiment </h3><br>
-        <h4> Please sign in with the username and password that were given to you </h4>
-        <img src="game-theory.jpg" style="padding-top:40px">
+        <h2>Welcome!</h2>
+        <!--<img src="game-theory.jpg" style="padding-top:40px"><br><br>-->
+        <h5> Please sign in.</h5>
       {{/if}}  
       <br>
     </div>
@@ -38,7 +43,11 @@
     <div name="content" align="center">
       {{#if currentUser}}
         {{#if displayInformation}}
-          {{> displayInfo}}
+          {{#if welcomePage}}
+            {{> welcome}}
+          {{else}}
+            {{> tutorial}}
+          {{/if}}
         {{else}}
           {{> adminArea}}
           {{> gameArea }}
@@ -47,25 +56,160 @@
     </div>
     
     <div name="footer" align="center" style="padding-top:50px" >
-      <div style="font-size:10px"></div>
+      <div style="font-size:10px"> behavioral experiment platform</div>
       <div style="font-size:10px">@2014</div>
     </div>
   </div>
 </template>
 
-<template name="displayInfo">
-  <h4> The rules of the game are simple.... Please click continue so you can be assigned to a group and start playing</h4>
-  <button type="submit" class="btn btn-default"  id="quitInformationPanel" >continue</button>
+<template name="historyOfUser">
+  
+  <!--<table>
+    <tr>
+      <td>a</td>
+      <td>b</td>
+      <td>c</td>
+      <td>d</td>
+    </tr>
+  </table> -->
+  
+  
 </template>
 
+<template name="welcome">
+  <h3> Welcome! </h3><br><br>
+  
+  <p> Thank you for participate in this game. </p><br>
+  <p> Before start playing, please read the tutorial that will explain you all the details to understand the game. </p><br>
+  <button type="submit" class="btn btn-default"  id="goTutorial" >Show me the tutorial</button>
+</template>
+
+<template name="tutorial">
+  <h2> Tutorial </h2>
+  <br>
+  <br>
+  
+  <div id=step1>
+    <p style="font-size:80%"> 1/7 </p>
+  <p> In this game you must propose and accept (or reject) offers.</p>
+  <p> You will play successive rounds in different groups. </p>
+  <p> In the beginning of each round, you and each of your group mates will have 10 coins. </p>
+  <p> Everyone has to offer some of those coins to the group. </p>
+  <p> You and each of your group mates will also decide what offers are acceptable. </p>
+  <br>
+  
+  <button type="submit" class="btn btn-default"  id="step1linkNext" >Next</button>
+
+  </div>
+  
+  <div id=step2 style="display:none">
+    <p style="font-size:80%"> 2/7 </p>
+  <p> An offer will be accepted if a minimum of {{rule}} of the players accept it. (The player proposing can't accept his/her own proposal!) </p>
+  <p> If an offer is accepted, the person proposing the offer will save 10 minus the value proposed. </p> 
+  <p> Then, the remaining group will divide between each member the accepted offer.</p>
+  <br>
+  <button type="submit" class="btn btn-default"  id="step2linkPrevious" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step2linkNext" >Next</button>
+
+  </div>
+  
+  <div id=step3 style="display:none">
+    <p style="font-size:80%"> 3/7 </p>
+  <p> If an offer is rejected, the person and the group will not gain anything! </p>
+  <br>
+  <button type="submit" class="btn btn-default"  id="step3linkPrevious" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step3linkNext" >Next</button>
+
+  </div>
+  
+  <div id=step4 style="display:none">
+    <p style="font-size:80%"> 4/7 </p>
+  
+  <p> The game has a total of {{nRounds}} rounds. You will be playing in a group composed by {{groupSize}} player(s). </p>
+  
+  <p> Between each round, the groups will be shuffled. </p>
+  
+  <br>
+  <button type="submit" class="btn btn-default"  id="step4linkPrevious" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step4linkNext" >Next</button>
+
+  </div>
+  
+  <div id=step5 style="display:none">
+    <p style="font-size:80%"> 5/7 </p>
+  
+  <p> Your total reward is the sum of what you will earn in all the {{nRounds}} rounds played. </p>
+  
+  <br>
+  <button type="submit" class="btn btn-default"  id="step5linkPrevious" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step5linkNext" >Next</button>
+
+  </div>
+  
+  <div id=step6 style="display:none">
+    <p style="font-size:80%"> 6/7 </p>
+   <p>In the video below, you can watch an example of round between three players.</p>
+  <br><br>
+  
+  <!--<iframe width="460" height="315" src="//www.youtube.com/embed/PSu1FPDk-ng?rel=0" frameborder="0" allowfullscreen></iframe><br><br>-->
+  
+  
+  
+  <video width="560" height="315" controls >
+  <source src="tutorialMUG.mp4" type="video/mp4">
+  <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab" data="tutorialMUG.mp4" width="560" height="315">
+    <embed width="560" height="315" src="tutorialMUG.mp4">
+  </object>
+  </video><br><br><br>
+  
+  <p style="font-size:80%">(or, on <a target="_blank" href="http://youtu.be/PSu1FPDk-ng" >youtube</a>)</p><br>
+  
+  <!--<p> <b>Example:</b> </p> <br>
+  <p>Imagine that you are playing with Alice and Bob and that the game rules define that that 2 persons have to accept one offer, for it to be overall accepted.</p>
+  <br>
+  <p> You propose 4. You only accept offers above or equal to 3 . </p>
+  <p> Alice proposes 3. She only accepts offers above or equal to 3. </p>
+  <p> Bob proposes 6. He only accepts offers above or equal to 4. </p>
+  <br><br>
+  <p> Your proposal is accepted! Alice and Bob both accept a proposal of 4. </p>
+  <p> The proposal of Alice is rejected. You accept it, but Bob rejects as it is a very low offer! It would be necessary two persons to accept it.</p>
+  <p> The proposal of Bob is accepted! Both you and Alice accept it, as 6 is higher than 3. </p>
+  <br> 
+  <h5> Your total reward in this round is 6 + 3 = 9! </h5>
+  <p> (6 = 10 minus your accepted proposal) and (3 = accepted proposal of Bob divided between you and Alice) </p>
+  <br>-->
+  <button type="submit" class="btn btn-default"  id="step6linkPrevious" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="step6linkNext" >Next</button>
+
+  </div>
+  
+  <div id=step7 style="display:none">
+    <p style="font-size:80%"> 7/7 </p>
+  
+  <p> Remember that in the instance of the game you will be playing, <b>an offer will be accepted if at least {{rule}} of the players accept it. </b></p>
+  
+  <p> You can review this tutorial at any time, by clicking on <i>tutorial</i> in the top of the screen. </p>
+  
+  <h3>Good Luck</h3>
+  
+  <br>
+  <button type="submit" class="btn btn-default"  id="step7linkPrevious" >Previous</button>
+  <button type="submit" class="btn btn-default"  id="quitInformationPanel" >Proceed to game</button>
+
+  </div>
+  
+  
+</template>
+
+
 <template name="userInformation">
-  <p class="navbar-text">welcome {{currentUser.username}}</p>
+  <p class="navbar-text"> welcome {{currentUser.username}}</p>
+    <ul class="nav navbar-nav">
+      <li> <a href="#" id="displayInformation">tutorial</a> </li>
+    </ul>
   <form class="navbar-form navbar-left" role="search">
     <button type="submit" class="btn btn-default"  id="logOutButton" >logout</button>
   </form>
-    <ul class="nav navbar-nav">
-      <li> <a href="#" id="displayInformation">informations</a> </li>
-    </ul>
 </template>
 
 <template name="adminArea">
@@ -74,45 +218,59 @@
     {{> createUser}}
     {{> groupCapacity}}
     {{> createSession}}
+    {{> viewSuggestions}}
   </div>
   {{/if}}
 </template>
       
 <template name="gameArea">
   {{#if show}}
-    {{#if groupIsFull}}
-      {{#if strategiesInserted}}
-        {{#if allGroupResponded}}
-          {{#if rewardComputed}}
-            <h1> your reward this round: {{roundReward}} </h1>
-            {{#if allRoundsPlayed}}
-              <div> your total reward: {{totalReward}} </div>
-              <div> thank you for your participation. form? </div>
-            {{else}}
-                <input id="playNextRound" type="submit" value="play next round">
-            {{/if}}
+    {{#if strategiesInserted}} <!-- p.size >= reward and state > 1 -->
+      {{#if allAgentsResponded}} <!-- plays size = population -->
+        {{#if rewardComputed}} <!-- state = 2 -->
+          {{> reportRoundReward}}
+          {{#if allRoundsPlayed}}
+            <br> <h3> You played all rounds! </h3>
+            <h2> Total reward: {{totalReward}} </h2>
+            <br><br><h4>Thank you for your participation!</h4>
+            {{> introduceSuggestions}}
           {{else}}
-            <input id="updateRoundReward" type="submit" value="compute reward">
+            <input id="playNextRound" type="submit" value="Play next round" class="btn btn-default">
           {{/if}}
         {{else}}
-          {{> waitOtherStrategies}}
+          <h5> All the players of your group submited their strategies! </h5> <br>
+          <h5> Click below to see what you earned in this round. </h5> <br>
+          <input id="updateRoundReward" type="submit" value="Compute reward" class="btn btn-default">
         {{/if}}
       {{else}}
-        {{> introduceStrategy}}
+        {{> waitOtherStrategies}}
       {{/if}}
     {{else}}
-      <h4> Wait for other players... </h4>
-      <h5> In this game room, so far: </h5>
-      {{#each groupMates}}
-        <div> {{idPlayer}} </div>
-      {{/each}}
+      {{> introduceStrategy}} <!-- state = 0 -->
     {{/if}}
   {{/if}}
+</template>
+
+
+<template name="reportRoundReward">
+
+  {{#each roundRewardReportMine}}
+  <p> <b>- Your offer was accepted by {{acceptors}} player(s) so you earned {{reward}}.</b>  </p>
+  {{/each}}
+  
+  {{#each roundRewardReportOther}}
+    <p> - The offer of {{id}} was accepted by {{acceptances}} player(s) so you earned {{offer}} </p>
+  {{/each}}
+  
+  <br><h3> You earned <b>{{roundReward}}</b> this round! </h3><br><br>
+  
+  
   
 </template>
 
+
 <template name="waitOtherStrategies">
-  <h1> wait other strategies </h1>
+  <h5> Please wait until all the players of your group submit their strategies... </h5>
 </template>
 
 <template name="createUser">
@@ -128,7 +286,7 @@
 
 <template name="createSession">
   <h3> Create new session </h3>
-  <form role="form">
+  <form role="form" id="createSessionForm">
     <div class="form-group" style="width:20%">
     <input id="sessionId" type="text" placeholder="id" class="form-control"><br>
     <input id="populationSize" type="number" placeholder="population size" class="form-control"><br>
@@ -136,6 +294,7 @@
     <input id="numberRounds" type="number" placeholder="number rounds"  class="form-control"><br>
     <input id="rule" type="number" placeholder="rule"  class="form-control"><br>
     <input id="date" type="text" placeholder="date"  class="form-control"><br>
+    
     <input id="createNewSession" type="submit" value="create session" class="btn btn-default">
     </div>
   </form>
@@ -152,7 +311,7 @@
   <form class="navbar-form navbar-left" role="search" autocomplete="off">
     <div class="form-group">
       <input type="text" class="form-control" placeholder="username" id="loginSectionUsername" >
-      <input type="text" class="form-control" placeholder="password" id="loginSectionPassword" >
+      <input type="password" class="form-control" placeholder="password" id="loginSectionPassword" >
     </div>
     <button type="submit" class="btn btn-default"  id="loginSectionLogin" >login</button>
   </form>
@@ -165,19 +324,17 @@
     <tr>
   <td>Player ID</td>
   <td>Rounds Played</td>  
-  <td>Actual Group</td>  
   <td>Password</td>  
   <td>State</td>  
-  <td>List of p played</td>  
-  <td>List of q played</td>  
+  <td>p played</td>  
+  <td>q played</td>  
   <td>Rewards</td> 
   </tr>
   </thead>
   {{#each player}}
   <tr>
   <td>{{idPlayer}}</td>
-  <td>{{timesPlayed}}</td>  
-  <td>{{actualGroup}}</td>  
+  <td>{{timesPlayed}}</td> 
   <td>{{password}}</td>  
   <td>{{state}}</td>  
   <td>{{pPlayed}}</td>  
@@ -193,24 +350,97 @@
   <table class="table table-condensed" border="1">
   <thead>
     <tr>
-    <td>Session ID</td> <td>Rule (A)</td> <td>Groups and Remaining Capacity</td>  <td>Number of saved strategies on each group </td>
+    <td>Session ID</td> <td>Rule (A)</td> <td>Groups Size</td> <td> Date </td>
     </tr>  
     </thead>
   {{#each sessions}}
     <tr>
-    <td>{{idSession}}</td> <td>{{rule}}</td>  <td>{{groupCapacity}}</td>  <td>{{receivedStrategiesOnGroup}}</td>
+    <td>{{idSession}}</td> <td>{{rule}}</td> <td>{{groupSize}}</td> <td>{{date}}</td>
     </tr>  
   {{/each}}
   </table>
 </template>
 
+<template name="viewSuggestions">
+  <h3> List of Suggestions </h3>
+  <ul>
+  {{#each suggestions}}
+    <li><b>User: {{idPlayer}} -> </b> {{suggestion}}</li>  
+  {{/each}}
+  </ul>
+</template>
+
+<template name="introduceSuggestions">
+  <br>
+  <div id="suggestionForm" class="form-group" style="width:50%">
+  
+  <h5>Please fill the form and indicate your username ({{username}}) to receive the prize!</h5><br>
+  
+  <form role="form" id="introduceSuggestions">
+  <label for="suggestionField">Suggestions</label>
+  <textarea id="suggestionField" rows="4" cols="50" class="form-control"> </textarea><br>
+  <!--<button type="submit" class="btn btn-default"  id="submitSuggestion" > Submit suggestion </button><br>-->
+  <input id="submitSuggestion" type="submit" value="Submit suggestion" class="btn btn-default">
+  </form>
+  </div>
+  
+  <div id="thanksSuggestions" style="display: none">
+  <p> Your suggestions were submited. Thank you very much! </p>
+  </div>
+  
+</template>
+
+
 <template name="introduceStrategy">
-  <p> Please, introduce your strategy: </p>
-  <form aligh="center" role="form">
+
+  <table class="table" border="2">
+  <thead>
+    <tr> 
+  <th>Your offers in previous rounds</th>
+  <th>Your acceptance minimum in previous rounds</th>
+  <th>Your previous rewards</th> 
+  </tr>
+  </thead>
+  {{#each player}}
+  <tr>
+  <td>{{pPlayed}}</td>  
+  <td>{{qPlayed}}</td>
+  <td>{{reward}}</td> 
+  </tr>
+  {{/each}}
+  </table>
+<br>
+
+  <h5> 10 coins were given to you. Using the next sliders, please introduce your strategy. </h5>
+  <p> Above, you can check your previous plays.</p>
+  <p> You can decide what you will offer and what are the offers that you will accept. </p>
+  
+  <p> An offer will be accepted if <b>at least {{rule}} player(s) accept(s) it</b>. </p>
+  
+  <p> Your total reward after playing with this group will be sum of:</p>
+  
+  <p> 1) 10 minus your offer to the group, if your offer is accepted. 0 if your offer is rejected. </p>
+  <p> 2) Each of the offers of the other players in the group, if they are accepted. </p>
+  <br><br>
+  
+  
+  
+  <form aligh="center" role="form" oninput="amountP.value=pValue.value; amountQ.value=qValue.value;">
   <div class="form-group" style="width:20%">
-    <input id="pValue" type="number" placeholder="offer"  class="form-control"><br>
-    <input id="qValue" type="number" placeholder="accept above"  class="form-control"><br>
-    <input id="submitStrategy" type="submit" value="submit" class="btn btn-default">
+  
+    <!--<input id="pValue" type="number" placeholder="offer"  class="form-control" required ><br>
+    <input id="qValue" type="number" placeholder="accept above"  class="form-control" required><br>-->
+    
+    <h4>Offer to the group: </h4>
+    <input type="range" id="pValue" name="pValue" min="1" max="10" value="1">
+    <output name="amountP" for="rangeInput">1</output>
+    
+    <h4> Accept a minimum of:  </h4>
+    <input type="range" id="qValue" name="qValue" min="1" max="10" value="1">
+    <output name="amountQ" for="rangeInput2">1</output>
+    
+    <br>
+    <input id="submitStrategy" type="submit" value="Submit strategy" class="btn btn-default">
     </div>
   </form>
 </template>

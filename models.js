@@ -3,17 +3,19 @@
 Players = new Meteor.Collection('players');
 Sessions = new Meteor.Collection('sessions');
 Suggestions = new Meteor.Collection('suggestions');
+Plays = new Meteor.Collection('plays');
 
 Meteor.methods({
   
+  createPlayer: function(idPlayer, idSession, password){
+    Players.insert({idPlayer: idPlayer, idSession: idSession, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [], password: password});
+    var options = {username: idPlayer, password: password};
+    Accounts.createUser(options);
+  },  
+  
   //admin methods
   createSession: function(idSession, populationSize, groupSize, numberRounds, date, rule){
-    Sessions.insert({idSession: idSession, populationSize: populationSize, groupSize: groupSize, groupCapacity: [], receivedStrategiesOnGroup: [], alreadyCalculatedReward: [], numberRounds: numberRounds, date: date, rule: rule});
-    for(i = 0; i<(populationSize/groupSize)*numberRounds; i++){
-      Sessions.update({idSession: idSession} ,{$push: {groupCapacity: groupSize}});
-      Sessions.update({idSession: idSession} ,{$push: {receivedStrategiesOnGroup: 0}});
-      Sessions.update({idSession: idSession} ,{$push: {alreadyCalculatedReward: 0}});
-    }
+    Sessions.insert({idSession: idSession, populationSize: populationSize, groupSize: groupSize, numberRounds: numberRounds, date: date, rule: rule});
 
     //create necessary users
     for(i = 0; i<populationSize; i++){
@@ -21,7 +23,7 @@ Meteor.methods({
       //var randNumber = Math.floor((Math.random()*100)+1);
       var randNumber = 1;
       var password = newIdPlayer.concat(randNumber.toString());
-      Players.insert({idPlayer: newIdPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [], actualGroup: "", password: password, state: 0});
+      Players.insert({idPlayer: newIdPlayer, idSession: idSession, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [], password: password});
       var options = {username: newIdPlayer, password: password};
       Accounts.createUser(options);
     }
@@ -29,56 +31,67 @@ Meteor.methods({
   
   introduceStrategy: function(idPlayer, suggestion){
   	Suggestions.insert({idPlayer: idPlayer, suggestion: suggestion});
+  	return false;
   },
   
-  createPlayer: function(idPlayer, idSession, password, state){
-    Players.insert({idPlayer: idPlayer, idSession: idSession, timesPlayed: 0, pPlayed: [ ], qPlayed: [ ], reward: [], othersOfferReport: [], myOfferReport: [], actualGroup: "", password: password, state: state});
-    var options = {username: idPlayer, password: password};
-    Accounts.createUser(options);
-  },
-  
-  saveStrategy : function(idPlayer,p,q){
-    Players.update({idPlayer: idPlayer}, {$push: {pPlayed: p}});
-    Players.update({idPlayer: idPlayer}, {$push: {qPlayed: q}});
-    Players.update({idPlayer: idPlayer}, {$set: {state: 2}});
-    Players.update({idPlayer: idPlayer}, {$inc: {timesPlayed: 1}});
-    var group = Players.findOne({idPlayer: idPlayer}).actualGroup;
-    var idSession = Players.findOne({idPlayer: idPlayer}).idSession;
-    var rsog = Sessions.findOne({idSession: idSession}).receivedStrategiesOnGroup;
-    rsog[group]++;
-    Sessions.update({idSession: idSession},{$set: {receivedStrategiesOnGroup: rsog}});
-    return false;
+  saveStrategy : function(idPlayer,p,q, idSession, round){
+  	Plays.insert({round: round, idPlayer: idPlayer, p: p, q: q, idSession: idSession});
+  	Players.update({idPlayer: idPlayer},{$push:  {pPlayed: p}});
+  	Players.update({idPlayer: idPlayer},{$push:  {qPlayed: q}});
+  	
+  	return false;
   },
 
-  updateRoundReward: function(username, idSession){
+  updateRoundReward: function(username, idSession, round){
+  	
+  	
+  	//choose group-size -1 random strategies from the plays
+  	//compute reward
+  	//update player reward
+  	
     var sessionRule = Sessions.findOne({idSession: idSession}).rule;
     var groupSize = Sessions.findOne({idSession: idSession}).groupSize;
-    var group = Players.findOne({idPlayer: username}).actualGroup;
+    
     var roundNumber = 0;
-    var groupMates = Players.find({actualGroup: group, idSession: idSession});
     var pp = [];
     var qq = [];
     var names = [];
     var myP = 0;
     var myQ = 0;
     var finalReward = 0;
-    
-    
-    groupMates.forEach(function(g) {      
-      if(g.idPlayer == username){
-	    myP=(g.pPlayed)[(g.pPlayed).length-1];
-	    myQ=(g.qPlayed)[(g.qPlayed).length-1];
-	    
-      }
-      else
-      {
-      	
-	pp= pp.concat((g.pPlayed)[(g.pPlayed).length-1]);
-	qq= qq.concat((g.qPlayed)[(g.qPlayed).length-1]);
-	names = names.concat(g.idPlayer);
-      }
-    })
 
+    myP=Plays.findOne({idPlayer: username, idSession: idSession, round: round}).p;
+    myQ=Plays.findOne({idPlayer: username, idSession: idSession, round: round}).q;
+    
+    ppTmp = [];
+    qqTmp = [];
+    namesTmp = [];
+    
+    var tmpResults = Plays.find({idSession: idSession, round: round});
+    tmpResults.forEach(function (val) {
+    	if(val.idPlayer != username){
+    	  ppTmp = ppTmp.concat(val.p);
+    	  qqTmp = qqTmp.concat(val.q);
+    	  namesTmp = namesTmp.concat(val.idPlayer);
+    	}
+    });
+    
+    var indexes = [];
+    var times = 0;
+    
+    //select random strategies
+    while(times < (groupSize-1)){
+    	var rrr = Math.floor(Math.random() * (groupSize-1));
+	while(indexes.indexOf(rrr)>0) rrr = Math.floor(Math.random() * (groupSize-1));
+    	indexes = indexes.concat(rrr);
+    	times += 1;
+    }
+    
+    for(i=0; i<indexes.length; i++){    
+    	pp=pp.concat(ppTmp[indexes[i]]);
+    	qq=qq.concat(qqTmp[indexes[i]]);
+    	names = names.concat(namesTmp[indexes[i]]);
+    }
 
     //my proposal is accepted?
     var countAcceptors = 0;
@@ -101,6 +114,7 @@ Meteor.methods({
     }
    
     
+    
     //my group mates proposals are accepted?
     for(i=0; i<pp.length; i++){
       var numberAcceptorsProposalP = 0;
@@ -119,8 +133,8 @@ Meteor.methods({
       }
       
       if(numberAcceptorsProposalP>=sessionRule){
-       finalReward+=parseFloat(pp[i])/(groupSize-1);
-       othersReport = othersReport.concat({id: names[i], offer: (parseInt(pp[i])*1.0/qq.length), acceptances: numberAcceptorsProposalP});
+       finalReward+=Math.round(parseFloat(pp[i])/(groupSize-1) * 100) / 100;
+       othersReport = othersReport.concat({id: names[i], offer: (Math.round(parseFloat(pp[i])/(groupSize-1) * 100) / 100), acceptances: numberAcceptorsProposalP});
        }
        else{
        othersReport = othersReport.concat({id: names[i], offer: 0, acceptances: numberAcceptorsProposalP});
@@ -129,20 +143,9 @@ Meteor.methods({
        
     }
     
-    /* names of who accepted */
-    
-    Players.update({idPlayer: username},{$push: {reward: finalReward}});
-    Players.update({idPlayer: username},{$set:  {state: 3}});
-    
+    Players.update({idPlayer: username},{$push: {reward: Math.round(finalReward * 100) / 100}});
     Players.update({idPlayer: username},{$push:  {othersOfferReport: othersReport}});
     Players.update({idPlayer: username},{$push:  {myOfferReport: myReport}});
-    
-    
-    var acr = Sessions.findOne({idSession: idSession}).alreadyCalculatedReward;
-    acr[group]++;
-    Sessions.update({idSession: idSession},{$set: {alreadyCalculatedReward: acr}});
-    
-    
     return false;
   }
   
