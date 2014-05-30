@@ -82,7 +82,9 @@ Meteor.methods({
     //select random strategies
     while(times < (groupSize-1)){
     	var rrr = Math.floor(Math.random() * (groupSize-1));
-	while(indexes.indexOf(rrr)>0) rrr = Math.floor(Math.random() * (groupSize-1));
+	while(indexes.indexOf(rrr) != -1){ 
+	  rrr = Math.floor(Math.random() * (groupSize-1));
+	}
     	indexes = indexes.concat(rrr);
     	times += 1;
     }
@@ -134,10 +136,19 @@ Meteor.methods({
       
       if(numberAcceptorsProposalP>=sessionRule){
        finalReward+=Math.round(parseFloat(pp[i])/(groupSize-1) * 100) / 100;
-       othersReport = othersReport.concat({id: names[i], offer: (Math.round(parseFloat(pp[i])/(groupSize-1) * 100) / 100), acceptances: numberAcceptorsProposalP});
+       
+       //with name of opponent
+       //othersReport = othersReport.concat({id: names[i], offer: (Math.round(parseFloat(pp[i])/(groupSize-1) * 100) / 100), acceptances: numberAcceptorsProposalP});
+       
+       //without name
+       othersReport = othersReport.concat({id: "number "+i+" ", offer: (Math.round(parseFloat(pp[i])/(groupSize-1) * 100) / 100), acceptances: numberAcceptorsProposalP});
        }
        else{
-       othersReport = othersReport.concat({id: names[i], offer: 0, acceptances: numberAcceptorsProposalP});
+	 //with name
+       //othersReport = othersReport.concat({id: names[i], offer: 0, acceptances: numberAcceptorsProposalP});
+       
+       //without name
+       othersReport = othersReport.concat({id: "number "+i+" ", offer: 0, acceptances: numberAcceptorsProposalP});
        	
        }
        
