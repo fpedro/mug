@@ -51,6 +51,7 @@ Meteor.methods({
   	
     var sessionRule = Sessions.findOne({idSession: idSession}).rule;
     var groupSize = Sessions.findOne({idSession: idSession}).groupSize;
+    var populationSize = Sessions.findOne({idSession: idSession}).populationSize;
     
     var roundNumber = 0;
     var pp = [];
@@ -81,10 +82,8 @@ Meteor.methods({
     
     //select random strategies
     while(times < (groupSize-1)){
-    	var rrr = Math.floor(Math.random() * (groupSize-1));
-	while(indexes.indexOf(rrr) != -1){ 
-	  rrr = Math.floor(Math.random() * (groupSize-1));
-	}
+      var rrr = Math.floor(Math.random() * (populationSize-1));
+	while(indexes.indexOf(rrr) != -1){ rrr = Math.floor(Math.random() * (populationSize-1));}
     	indexes = indexes.concat(rrr);
     	times += 1;
     }
@@ -94,6 +93,10 @@ Meteor.methods({
     	qq=qq.concat(qqTmp[indexes[i]]);
     	names = names.concat(namesTmp[indexes[i]]);
     }
+    
+    //console.log(names);
+    //console.log(pp);
+    //console.log(qq);
 
     //my proposal is accepted?
     var countAcceptors = 0;

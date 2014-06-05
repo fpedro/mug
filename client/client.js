@@ -38,6 +38,10 @@ Template.tutorial.events = {
     return false;
   },
   
+  'click #skiptutorial' : function(event) {
+    Session.set("displayInfo", false);
+    return false;
+  },
   
   'click #step2linkPrevious' : function(event) {
   	$("#step2").hide();
@@ -47,31 +51,31 @@ Template.tutorial.events = {
   
   'click #step3linkPrevious' : function(event) {
     $("#step3").hide();
-  	$("#step2").fadeIn("slow");
+  	$("#step2").fadeIn();
     return false;
   },
   
   'click #step4linkPrevious' : function(event) {
   	$("#step4").hide();
-  	$("#step3").fadeIn("slow");
+  	$("#step3").fadeIn();
     return false;
   },
   
   'click #step5linkPrevious' : function(event) {
   	$("#step5").hide();
-  	$("#step4").fadeIn("slow");
+  	$("#step4").fadeIn();
     return false;
   },
   
   'click #step6linkPrevious' : function(event) {
   	$("#step6").hide();
-  	$("#step5").fadeIn("slow");
+  	$("#step5").fadeIn();
     return false;
   },  
   
   'click #step7linkPrevious' : function(event) {
   	$("#step7").hide();
-  	$("#step6").fadeIn("slow");
+  	$("#step6").fadeIn();
     return false;
   },  
   
@@ -82,37 +86,37 @@ Template.tutorial.events = {
   
   'click #step1linkNext' : function(event) {
   	$("#step1").hide();
-    $("#step2").fadeIn("slow");
+    $("#step2").fadeIn();
     return false;
   },
   
   'click #step2linkNext' : function(event) {
   	$("#step2").hide();
-    $("#step3").fadeIn("slow");
+    $("#step3").fadeIn();
     return false;
   },
   
   'click #step3linkNext' : function(event) {
   	$("#step3").hide();
-    $("#step4").fadeIn("slow");
+    $("#step4").fadeIn();
     return false;
   },
   
   'click #step4linkNext' : function(event) {
   	$("#step4").hide();
-    $("#step5").fadeIn("slow");
+    $("#step5").fadeIn();
     return false;
   },
   
   'click #step5linkNext' : function(event) {
   	$("#step5").hide();
-    $("#step6").fadeIn("slow");
+    $("#step6").fadeIn();
     return false;
   },
   
   'click #step6linkNext' : function(event) {
   	$("#step6").hide();
-    $("#step7").fadeIn("slow");
+    $("#step7").fadeIn();
     return false;
   },
   
@@ -257,6 +261,18 @@ Template.tutorial.groupSize = function(){
 	return session.groupSize; 
 }
 
+Template.tutorial.groupSize = function(){
+	var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
+	var session = Sessions.findOne({idSession: idSession});
+	return session.groupSize; 
+}
+
+Template.tutorial.populationSize = function(){
+	var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
+	var session = Sessions.findOne({idSession: idSession});
+	return session.populationSize; 
+}
+
 Template.listOfUsers.userss = function() {
   return Meteor.users.find({});
 }
@@ -341,6 +357,15 @@ Template.tutorial.rule = function() {
 	return session.rule; 	
 }
 
+Template.waitOtherStrategies.playersLeft = function() {
+  var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
+  var round = Players.findOne({idPlayer: Meteor.user().username}).reward.length;
+  var receivedStrategies = Plays.find({idSession: idSession, round: round}).count();
+  var populationSize = Sessions.findOne({idSession: idSession}).populationSize;
+  
+  return populationSize - receivedStrategies;
+	
+}
 
 
 Template.gameArea.rewardComputed = function() {
@@ -354,16 +379,6 @@ Template.gameArea.allRoundsPlayed = function() {
   var numberRounds = Sessions.findOne({idSession: Players.findOne({idPlayer: Meteor.user().username}).idSession}).numberRounds;
   
   return (rewards == numberRounds);
-}
-
-Template.gameArea.groupIsFull = function(){
-  var idSession = Players.findOne({idPlayer: Meteor.user().username}).idSession;
-  var state = Players.findOne({idPlayer: Meteor.user().username}).state;
-  if(state > 1) return true;
-  var session = Sessions.findOne({idSession: idSession});
-  var actualGroup = Players.findOne({idPlayer: Meteor.user().username}).actualGroup;
-  var capacity = session.groupCapacity[actualGroup];
-  return capacity==0;
 }
 
 Template.gameArea.strategiesInserted = function(){

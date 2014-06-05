@@ -56,22 +56,12 @@
     </div>
     
     <div name="footer" align="center" style="padding-top:50px" >
-      <div style="font-size:10px"> behavioral experiment platform</div>
       <div style="font-size:10px">@2014</div>
     </div>
   </div>
 </template>
 
 <template name="historyOfUser">
-  
-  <!--<table>
-    <tr>
-      <td>a</td>
-      <td>b</td>
-      <td>c</td>
-      <td>d</td>
-    </tr>
-  </table> -->
   
   
 </template>
@@ -90,23 +80,23 @@
   <br>
   
   <div id=step1>
-    <p style="font-size:80%"> 1/7 </p>
+  <p style="font-size:80%"> 1/7 </p>
   <p> In this game you must propose and accept (or reject) offers.</p>
-  <p> You will play successive rounds with different groups. </p>
+  <p> You will play successive rounds with different groups. Groups will be composed by {{groupSize}} persons and there are {{populationSize}} different persons playing this game with you. </p>
   <p> In the beginning of each round, you and each of your group mates will have 10 coins. </p>
   <p> Everyone has to offer some of those coins to the group. </p>
   <p> You and each of your group mates will individually decide what offers are acceptable. </p>
+  <p> Keep in mind: <b> all your plays are completely anonymous</b>. Even your username will not be revealed, and will only be used to give you the prize.</p>
   <br>
-  
+  <!--<button id="skiptutorial" class="btn btn-default">Skip Tutorial</button>-->
   <button type="submit" class="btn btn-default"  id="step1linkNext" >Next</button>
-
   </div>
   
   <div id=step2 style="display:none">
-    <p style="font-size:80%"> 2/7 </p>
+  <p style="font-size:80%"> 2/7 </p>
   <p> An offer will be accepted if a minimum of {{rule}} of the players accept it. (The player proposing can't accept his/her own proposal!) </p>
   <p> If an offer is accepted, the person proposing the offer will save 10 minus the value proposed. </p> 
-  <p> Then, the remaining group will divide between each member the accepted offer.</p>
+  <p> Then, all the remaining group will divide between each member the accepted offer (even between those who individually rejected the offer).</p>
   <br>
   <button type="submit" class="btn btn-default"  id="step2linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step2linkNext" >Next</button>
@@ -114,84 +104,53 @@
   </div>
   
   <div id=step3 style="display:none">
-    <p style="font-size:80%"> 3/7 </p>
+  <p style="font-size:80%"> 3/7 </p>
   <p> If an offer is rejected, the person and the group will not gain anything! </p>
   <br>
   <button type="submit" class="btn btn-default"  id="step3linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step3linkNext" >Next</button>
 
   </div>
-  
   <div id=step4 style="display:none">
-    <p style="font-size:80%"> 4/7 </p>
-  
-  <p> The game has a total of {{nRounds}} rounds. You will be playing in a group composed by {{groupSize}} player(s). </p>
-  
+  <p style="font-size:80%"> 4/7 </p>
+  <p> <!--The game has a total of {{nRounds}} rounds. --> You will be playing in a group composed by {{groupSize}} player(s). </p>
   <p> Between each round, the groups will be shuffled. </p>
-  
   <br>
   <button type="submit" class="btn btn-default"  id="step4linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step4linkNext" >Next</button>
-
   </div>
   
   <div id=step5 style="display:none">
-    <p style="font-size:80%"> 5/7 </p>
-  
-  <p> Your total reward is the sum of what you will earn in all the {{nRounds}} rounds played. </p>
-  
+  <p style="font-size:80%"> 5/7 </p>
+  <p> Your total reward is the sum of what you will earn in all the rounds played. </p>
   <br>
   <button type="submit" class="btn btn-default"  id="step5linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step5linkNext" >Next</button>
-
   </div>
   
   <div id=step6 style="display:none">
-    <p style="font-size:80%"> 6/7 </p>
-   <p>In the video below, you can watch an example of round between three players.</p>
+  <p style="font-size:80%"> 6/7 </p>
+  
+  
+  <!--<p>In the video below, you can watch an example of round between three players.</p>
   <br><br>
-  
-  <!--<iframe width="460" height="315" src="//www.youtube.com/embed/PSu1FPDk-ng?rel=0" frameborder="0" allowfullscreen></iframe><br><br>-->
-  
-  
-  
   <video width="560" height="315" controls >
   <source src="tutorialMUG.mp4" type="video/mp4">
   <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab" data="tutorialMUG.mp4" width="560" height="315">
     <embed width="560" height="315" src="tutorialMUG.mp4">
   </object>
   </video><br><br><br>
+  <p style="font-size:80%">(or, on <a target="_blank" href="http://youtu.be/PSu1FPDk-ng" >youtube</a>)</p><br>-->
   
-  <p style="font-size:80%">(or, on <a target="_blank" href="http://youtu.be/PSu1FPDk-ng" >youtube</a>)</p><br>
-  
-  <!--<p> <b>Example:</b> </p> <br>
-  <p>Imagine that you are playing with Alice and Bob and that the game rules define that that 2 persons have to accept one offer, for it to be overall accepted.</p>
-  <br>
-  <p> You propose 4. You only accept offers above or equal to 3 . </p>
-  <p> Alice proposes 3. She only accepts offers above or equal to 3. </p>
-  <p> Bob proposes 6. He only accepts offers above or equal to 4. </p>
-  <br><br>
-  <p> Your proposal is accepted! Alice and Bob both accept a proposal of 4. </p>
-  <p> The proposal of Alice is rejected. You accept it, but Bob rejects as it is a very low offer! It would be necessary two persons to accept it.</p>
-  <p> The proposal of Bob is accepted! Both you and Alice accept it, as 6 is higher than 3. </p>
-  <br> 
-  <h5> Your total reward in this round is 6 + 3 = 9! </h5>
-  <p> (6 = 10 minus your accepted proposal) and (3 = accepted proposal of Bob divided between you and Alice) </p>
-  <br>-->
   <button type="submit" class="btn btn-default"  id="step6linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="step6linkNext" >Next</button>
-
   </div>
   
   <div id=step7 style="display:none">
-    <p style="font-size:80%"> 7/7 </p>
-  
-  <p> Remember that in the instance of the game you will be playing, <b>an offer will be accepted if at least {{rule}} of the players accept it. </b></p>
-  
+  <p style="font-size:80%"> 7/7 </p>
+  <p> Remember that in the instance of the game you will be playing, an offer will be accepted if <b style="font-size:120%"> at least {{rule}} </b> of the players accept it. </p>
   <p> You can review this tutorial at any time, by clicking on <i>tutorial</i> in the top of the screen. </p>
-  
   <h3>Good Luck</h3>
-  
   <br>
   <button type="submit" class="btn btn-default"  id="step7linkPrevious" >Previous</button>
   <button type="submit" class="btn btn-default"  id="quitInformationPanel" >Proceed to game</button>
@@ -270,7 +229,8 @@
 
 
 <template name="waitOtherStrategies">
-  <h5> Please wait until all the players of your group submit their strategies... </h5>
+  <h5> Please wait until all the players submit their strategies... </h5>
+  <h5> There are {{playersLeft}} players left. </h5>
 </template>
 
 <template name="createUser">
